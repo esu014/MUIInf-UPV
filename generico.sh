@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-
-#Hay que revisar!!
-
 #
 # pdu: Script genérico para manipular salidas de una PDU por telnet
 # Uso:
@@ -25,7 +22,7 @@
 
 set -u
 
-HOST="158.42.181.244"
+HOST="158.42.181.244" #Maquina por defecto, se puede cambiar entre el rango 241 a 245. Existe un parametro que cambia el host (opcion -H ip/url)
 NUM_SALIDAS=8
 RETRASO=1
 
@@ -72,6 +69,9 @@ send_telnet() {
   local estado="$2"
 
   echo "→ Operando salida ${salida}: estado=${estado} (${HOST})"
+  
+  if(($2 == 0)); then $estado = 2
+  fi
 
   {
     # Credenciales / pasos de menú (según tu ejemplo):
@@ -79,7 +79,7 @@ send_telnet() {
     printf "cos\n"         # contraseña
     printf "1\n"           # opción "control" (asumido)
     printf "%s\n" "$salida" # seleccionar salida
-    printf "%s\n" "$estado" # 1=ON, 0=OFF
+    printf "%s\n" "$estado" # 1=ON, 2=OFF
     printf "yes\n"         # confirmar
     printf "\n"
     printf "\033\0334\n"   # salir / volver (según ejemplo)
@@ -200,7 +200,7 @@ readarray -t SALIDAS < <(printf "%s\n" "${SALIDAS[@]}" | sort -n | uniq)
 ESTADO=""
 case "$ACTION" in
   -1) ESTADO="1"; ACCION_TXT="Encender" ;;
-  -0) ESTADO="0"; ACCION_TXT="Apagar"   ;;
+  -0) ESTADO="2"; ACCION_TXT="Apagar"   ;; # mirar aqui que esto era cero
 esac
 
 echo "=== PDU (${HOST}) | ${ACCION_TXT} | Salidas: ${SALIDAS[*]} | Retardo: ${RETRASO}s ==="
