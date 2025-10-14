@@ -51,7 +51,7 @@ Resultados del comando `route` sobre los distintos nodos:
 
 ---
 
-![Diagrama-Red.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/Diagrama-Red.png)
+![Diagrama-Red.png](imagenes/Diagrama-Red.png)
 
 ## Pregunta 3
 
@@ -67,7 +67,7 @@ mininet>h1 ping -c 10 h2
 
 Y el resultado ha sido el siguiente: el tiempo promedio ha sido de 0.491ms por envio
 
-![Captura de pantalla 2025-10-13 a las 20.33.11.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/Captura_de_pantalla_2025-10-13_a_las_20.33.11.png)
+![Captura de pantalla 2025-10-13 a las 20.33.11.png](imagenes/Captura_de_pantalla_2025-10-13_a_las_20.33.11.png)
 
 ### Con parámetros
 
@@ -85,7 +85,7 @@ mininet>h1 ping -c 10 h2
 
 Y el resultado ha sido el siguiente: el tiempo promedio ha sido de 51.688 ms por envío
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image.png)
+![image.png](imagenes/image.png)
 
 ### Conclusión
 
@@ -107,7 +107,7 @@ mininet>iperf h1 h2
 
 Y el resultado ha sido de 63,8 Gbits/sec | 64.0 GBit/sec
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%201.png)
+![image.png](imagenes/image%201.png)
 
 ### Con parámetros
 
@@ -125,7 +125,7 @@ mininet>iperf h1 h2
 
 Y el resultado ha sido de 9,45Mbits/sec | 10,8MBit/sec
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%202.png)
+![image.png](imagenes/image%202.png)
 
 ### Conclusión
 
@@ -147,7 +147,7 @@ Desde `h1` se lanzó un servidor web sencillo con Python:
 python2 -m SimpleHTTPServer 80 &
 ```
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%203.png)
+![image.png](imagenes/image%203.png)
 
 y desde `h2` se ejecutó el cliente:
 
@@ -157,11 +157,11 @@ wget -O - 10.0.0.1
 
 obteniendo correctamente la respuesta HTTP del servidor.
 
-![Captura de pantalla 2025-10-14 a las 10.30.07.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/Captura_de_pantalla_2025-10-14_a_las_10.30.07.png)
+![Captura de pantalla 2025-10-14 a las 10.30.07.png](imagenes/Captura_de_pantalla_2025-10-14_a_las_10.30.07.png)
 
 A su vez, en la terminal de h1, se puede observar que ha llegado la petición y su estado:
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%204.png)
+![image.png](imagenes/image%204.png)
 
 Para finalizar con el proceso del servidor, basta con ejecutar `Ctrl + C` y el siguiente comando en `h1`:
 
@@ -242,7 +242,7 @@ if __name__ == '__main__':
 
 ### Resultado
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%205.png)
+![image.png](imagenes/image%205.png)
 
 ## Pregunta 7
 
@@ -275,13 +275,13 @@ Las pruebas de rendimiento se realizarán desde la consola de Mininet (`CLI(net)
 mininet> h1 ping -c 5 h3
 ```
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%206.png)
+![image.png](imagenes/image%206.png)
 
 ```python
 mininet> iperf h1 h3
 ```
 
-![image.png](INFORME%201%20-%20Enrique%20Sope%C3%B1a%20Urbano%2028b7c9fe097580ebb275d5a0579f6105/image%207.png)
+![image.png](imagenes/image%207.png)
 
 **Conclusiones**
 
