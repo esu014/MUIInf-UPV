@@ -10,7 +10,8 @@ Esta carpeta contiene todo el contenido realizado durante el primer curso del ma
 ## [Docker]('./docker')
 ## Entorno Docker para el Máster
 
-> :information_source: **Nota:** Esta imagen Docker incluye las herramientas básicas necesarias para el desarrollo inicial del proyecto del Máster en Ingeniería Informática. A medida que surjan nuevos requisitos, se irán añadiendo más herramientas y dependencias al contenedor según sea necesario. Mantén el Dockerfile y el archivo `docker-compose.yml` actualizados para reflejar cualquier cambio en el entorno de desarrollo.
+> [!IMPORTANT]
+> Esta imagen Docker incluye las herramientas básicas necesarias para el desarrollo inicial del proyecto del Máster en Ingeniería Informática. A medida que surjan nuevos requisitos, se irán añadiendo más herramientas y dependencias al contenedor según sea necesario. Mantén el Dockerfile y el archivo `docker-compose.yml` actualizados para reflejar cualquier cambio en el entorno de desarrollo.
 
 
 Este proyecto utiliza un contenedor Docker configurado para proporcionar todas las herramientas necesarias para el desarrollo del Máster en Ingeniería Informática. La imagen se basa en Ubuntu 22.04 LTS, y está configurada con las siguientes herramientas y configuraciones:
