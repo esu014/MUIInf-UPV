@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  ubuntu-muiinf:
+    build: .
+    container_name: ubuntu-muiinf
+    image: ubuntu-muiinf:latest
+    tty: true
+    stdin_open: true
+
+    # Puertos configurables desde .env
+    ports:
+      - "${PORT_3001:-3001}:3001"
+      - "${PORT_3002:-3002}:3002"
+      - "${PORT_8080:-8080}:8080"
+      - "${PORT_5000:-5000}:5000"
+      - "${PORT_4222:-4222}:4222"
+      - "${PORT_8222:-8222}:8222"
+
+    volumes:
+      # Volumen persistente ubuntu-data montado en /data
+      - ubuntu-data:/home/root/
+
+    working_dir: /home/root/
+
+    environment:
+      - NODE_ENV=development
+      - LANG=C.UTF-8
+      - LC_ALL=C.UTF-8
+      - TZ=Europe/Madrid
+
+volumes:
+  ubuntu-data:
+    external: true
+

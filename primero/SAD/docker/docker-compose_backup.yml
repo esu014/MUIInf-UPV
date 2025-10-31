@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  ubuntu-muiinf:
+    build: .
+    container_name: ubuntu-muiinf
+    image: ubuntu-muiinf:latest
+    tty: true
+    stdin_open: true
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      # Carpeta actual del host montada en /workspace (para editar código)
+      - .:/workspace
+      # Volumen persistente ubuntu-data montado en /data
+      - ubuntu-data:/data
+    working_dir: /workspace
+
+volumes:
+  ubuntu-data:
+    external: true
+
