@@ -1,7 +1,11 @@
 
 # Laboratorio de Redes y Seguridad
 
-Este repositorio contiene los ejercicios realizados en el laboratorio para aprender sobre **Mininet** y **MQTT** en un entorno de red simulado. A lo largo del laboratorio, se abordaron conceptos fundamentales de redes, controladores SDN, y la comunicación en tiempo real con MQTT.
+Esta carpeta contiene los ejercicios realizados en el laboratorio para aprender sobre **Mininet** y **MQTT** en un entorno de red simulado. A lo largo del laboratorio, se abordaron conceptos fundamentales de redes, controladores SDN, y la comunicación en tiempo real con MQTT.
+
+>[!IMPORTANT] 
+>### Requisitos Previos
+>Antes de comenzar con las prácticas, debes **completar las configuraciones previas** descritas en los documentos proporcionados por el profesor. Estas instrucciones incluyen la descarga de herramientas, configuración del entorno y otros pasos importantes que debes seguir antes de realizar la **Práctica 1**.
 
 ## Prácticas Realizadas
 
@@ -28,10 +32,4 @@ Se profundizó en el concepto de **mensajes retenidos** en MQTT. Se modificó el
 
 Se desarrolló una **aplicación de chat simple** utilizando **MQTT** donde los miembros de un grupo pueden enviar y recibir mensajes. Todos los mensajes enviados por un usuario son recibidos por todos los miembros suscritos al mismo tópico de chat. El chat funciona en un sistema de **publicador y suscriptor** y permite una comunicación asíncrona en tiempo real.
 
-## Requisitos Previos
 
-Antes de comenzar con las prácticas, debes **completar las configuraciones previas** descritas en los documentos proporcionados por el profesor. Estas instrucciones incluyen la descarga de herramientas, configuración del entorno y otros pasos importantes que debes seguir antes de realizar la **Práctica 1**.
-
-## Conclusión
-
-Este laboratorio proporciona una **visión completa de cómo interactuar con MQTT** y **Mininet**, explorando desde la **publicación y suscripción básica** hasta el manejo de flujos en **redes definidas por software** (SDN) con **OpenFlow** y **ONOS**. El uso de **MQTT** para aplicaciones simples de **chat** y **comunicación de datos** es fundamental para entender cómo funciona este protocolo en entornos reales.
