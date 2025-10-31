@@ -1,13 +1,13 @@
 # Primer curso MUIInf
 Esta carpeta contiene todo el contenido realizado durante el primer curso del master del año 2025-2026
 
-## [COS]('./COS')
+## [COS](./COS)
 
-## [RSE]('./RSE')
+## [RSE](./RSE)
 
-## [SAD]('./SAD')
+## [SAD](./SAD)
 
-## [Entorno Docker para el Máster]('./docker')
+## [Entorno Docker para el Máster](./docker)
 
 > [!IMPORTANT]
 > Esta imagen Docker incluye las herramientas básicas necesarias para el desarrollo inicial del proyecto del Máster en Ingeniería Informática. A medida que surjan nuevos requisitos, se irán añadiendo más herramientas y dependencias al contenedor según sea necesario. Mantén el Dockerfile y el archivo `docker-compose.yml` actualizados para reflejar cualquier cambio en el entorno de desarrollo.
