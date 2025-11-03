@@ -1,0 +1,57 @@
+import time
+import base64
+import json
+import struct
+import paho.mqtt.client as mqtt
+
+def on_connectTTN(client, userdata, flags, reason_code, properties):
+    if reason_code == 0:
+        print("Successfully connected to", client._host, "port:", client._port)
+        print("Flags:", flags)
+        print("Properties:", properties)
+        client.subscribe(...)
+    else:
+        print("Connection failed. Reason code:", reason_code)
+
+def on_connectUBI(client, userdata, flags, reason_code, properties):
+    if reason_code == 0:
+        print("Successfully connected to", client._host, "port:", client._port)
+        print("Flags:", flags)
+        print("Properties:", properties)
+    else:
+        print("Connection failed. Reason code:", reason_code)
+
+# The callback for when a message is received from the server.
+def on_messageTTN(client, userdata, msg):
+    print("sisub: msg received with topic: {} ".format(msg.topic))
+    if ("v3/lopys2ttn@ttn/devices/" in msg.topic and "/up" in msg.topic):
+        themsg = json.loads(msg.payload.decode("utf-8"))
+        dpayload = themsg["uplink_message"]["decoded_payload"]
+        print("@%s >> temp=%.3f hum=%.3f lux=%.3f" % (time.strftime("%H:%M:%S"), dpayload["temperature"], dpayload["lux"], dpayload["humidity"]))
+        clientUBI.publish(...)
+
+clientTTN = mqtt.Client(
+        mqtt.CallbackAPIVersion.VERSION2,
+        client_id="",
+        clean_session=True,
+        userdata=None,
+        protocol=mqtt.MQTTv311,
+        transport="tcp"
+    )
+clientUBI = mqtt.Client(
+        mqtt.CallbackAPIVersion.VERSION2,
+        client_id="",
+        clean_session=True,
+        userdata=None,
+        protocol=mqtt.MQTTv311,
+        transport="tcp"
+    )
+
+clientTTN.on_connect = on_connectTTN
+clientTTN.on_message = on_messageTTN
+clientUBI.on_connect = on_connectUBI
+clientTTN.username_pw_set("...", password="...")
+clientTTN.connect("eu1.cloud.thethings.network", port=1883, keepalive=60)
+clientUBI.username_pw_set("...", password="...")
+clientUBI.connect("things.ubidots.com", port=1883, keepalive=60)
+clientTTN.loop_forever()
