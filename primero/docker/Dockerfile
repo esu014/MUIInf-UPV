@@ -32,6 +32,9 @@ RUN apt-get remove -y nodejs libnode-dev npm || true && \
     apt-get install -y nodejs && \
     npm install -g npm@latest
 
+# Instalar la librería paho-mqtt de forma global
+RUN pip3 install paho-mqtt
+
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
 VOLUME ["/home/root/"]
