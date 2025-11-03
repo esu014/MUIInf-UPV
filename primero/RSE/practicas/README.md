@@ -1,7 +1,6 @@
-
 # Laboratorio de Redes y Seguridad
 
-Esta carpeta contiene los ejercicios realizados en el laboratorio para aprender sobre **Mininet** y **MQTT** en un entorno de red simulado. A lo largo del laboratorio, se abordaron conceptos fundamentales de redes, controladores SDN, y la comunicación en tiempo real con MQTT.
+Esta carpeta contiene los ejercicios realizados en el laboratorio para aprender sobre **Mininet** y **MQTT** en un entorno de red simulado. A lo largo del laboratorio, se abordaron conceptos fundamentales de redes, controladores SDN y la comunicación en tiempo real con MQTT.
 
 >[!IMPORTANT] 
 >### Requisitos Previos
@@ -19,17 +18,12 @@ En esta práctica, se profundizó en la **gestión de flujos** dentro de un swit
 
 ### [3. Introducción a MQTT y Creación de una Aplicación de Chat Básica](./03)
 
-En esta práctica, se aprendió el funcionamiento básico de **MQTT**, un protocolo de mensajería ligero utilizado en redes de dispositivos IoT. Se desarrollaron dos aplicaciones simples:
-- **Un publicador** que envía mensajes aleatorios a un **topic** específico.
+En esta práctica, se aprendió el funcionamiento básico de **MQTT**, un protocolo de mensajería ligero utilizado en redes de dispositivos IoT. Se desarrollaron dos aplicaciones simples: un **publicador** que envía mensajes aleatorios a un tópico específico y un **suscriptor** que recibe dichos mensajes.  
 
-- **Un suscriptor** que recibe estos mensajes. 
+Se experimentó con la opción **`retain`** para comprender la **persistencia de mensajes**, se implementó una aplicación de **chat** entre varios clientes y se analizó el comportamiento del protocolo al modificar los nombres de los tópicos, verificando su sensibilidad a mayúsculas y minúsculas.
 
-Se experimentó con la opción **`retain`** para entender cómo funciona la **persistencia de mensajes** en MQTT, y se implementó una aplicación de **chat** en la que los mensajes enviados por un usuario son recibidos por todos los miembros del grupo suscritos a un mismo topic.
+### [4. Envío y Visualización de Datos en Ubidots](./04)
 
-También se experimentó con el comportamiento de MQTT al **cambiar el nombre de los tópicos**. Se verificó cómo los **tópicos son sensibles a las mayúsculas y minúsculas** y se observó cómo los mensajes no son recibidos si los **tópicos no coinciden exactamente** entre el publicador y el suscriptor.
+En esta práctica se integró **MQTT con la plataforma Ubidots**, simulando un dispositivo IoT que envía datos a la nube. Se desarrolló un script en Python que publica valores aleatorios en un dispositivo y variable creados en Ubidots, verificando su recepción en tiempo real.  
 
-Se profundizó en el concepto de **mensajes retenidos** en MQTT. Se modificó el código de un publicador para que los mensajes enviados al broker quedaran retenidos, lo que permite a los nuevos suscriptores recibir el último mensaje publicado en un tópico, incluso si no estaban conectados en ese momento.
-
-Se desarrolló una **aplicación de chat simple** utilizando **MQTT** donde los miembros de un grupo pueden enviar y recibir mensajes. Todos los mensajes enviados por un usuario son recibidos por todos los miembros suscritos al mismo tópico de chat. El chat funciona en un sistema de **publicador y suscriptor** y permite una comunicación asíncrona en tiempo real.
-
-
+Posteriormente, se diseñó un **dashboard** para visualizar los datos mediante distintos widgets (tabla, gráfico de líneas y métrica). Finalmente, se implementó una integración con **The Things Network (TTN)** para leer los valores del sensor (temperatura, humedad y luz) y reenviar solo la temperatura a Ubidots, completando así la comunicación entre un nodo LoRaWAN y la nube.
