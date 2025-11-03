@@ -1,10 +1,7 @@
 # INFORME 4 - Enrique Sopeña Urbano
 
----
 
 ## Pregunta 1
-
----
 
 En esta primera tarea se ha desarrollado un script en Python que permite enviar datos generados localmente a la plataforma **Ubidots** mediante el protocolo **MQTT**. El objetivo es simular un dispositivo IoT que transmite mediciones periódicas a la nube para su almacenamiento y análisis posterior.
 
@@ -28,8 +25,6 @@ En Ubidots, los valores aparecen registrados correctamente en la variable corres
 
 ## Pregunta 2
 
----
-
 En esta segunda tarea se ha creado un **dashboard en la plataforma Ubidots** para visualizar los datos enviados por el script desarrollado en la tarea anterior. Para ello, se añadieron tres widgets vinculados a la variable `variable_lab4` del dispositivo `device_lab4`.
 
 ![image.png](INFORME%204%20-%20Enrique%20Sope%C3%B1a%20Urbano/image.png)
@@ -41,8 +36,6 @@ El segundo es un **gráfico de líneas (Line Chart)** que representa la evoluci�
 Por último, se añadió un **widget tipo métrica (Metrics)** que muestra el valor más reciente recibido por la plataforma, simulando el comportamiento de un sensor en tiempo real.
 
 ## Pregunta 3
-
----
 
 En esta tercera tarea se ha desarrollado un programa en Python que recibe los datos publicados por **The Things Network (TTN)** y reenvía a **Ubidots** únicamente el valor correspondiente a la temperatura. Para ello, se utilizó el protocolo MQTT conectándose al broker de TTN (`eu1.cloud.thethings.network`) y al broker de Ubidots (`things.ubidots.com`).
 
