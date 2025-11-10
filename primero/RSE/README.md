@@ -12,6 +12,7 @@ El laboratorio incluye una serie de ejercicios prácticos enfocados en los sigui
 - **Gestión de flujos en Open vSwitch (OVS)** y controladores SDN como **ONOS**.  
 - **MQTT** para la comunicación en tiempo real, aplicado a escenarios IoT (Internet of Things).  
 - **Ubidots** para el envío, almacenamiento y visualización de datos en la nube mediante MQTT.
+- **Telegram Bot** para la consulta remota de datos IoT en tiempo real a través de una interfaz de mensajería interactiva.
 
 Cada práctica está documentada con explicaciones de los pasos realizados, los comandos utilizados y los resultados obtenidos.
 

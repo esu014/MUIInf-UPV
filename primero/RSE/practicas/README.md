@@ -27,3 +27,9 @@ Se experimentó con la opción **`retain`** para comprender la **persistencia de
 En esta práctica se integró **MQTT con la plataforma Ubidots**, simulando un dispositivo IoT que envía datos a la nube. Se desarrolló un script en Python que publica valores aleatorios en un dispositivo y variable creados en Ubidots, verificando su recepción en tiempo real.  
 
 Posteriormente, se diseñó un **dashboard** para visualizar los datos mediante distintos widgets (tabla, gráfico de líneas y métrica). Finalmente, se implementó una integración con **The Things Network (TTN)** para leer los valores del sensor (temperatura, humedad y luz) y reenviar solo la temperatura a Ubidots, completando así la comunicación entre un nodo LoRaWAN y la nube.
+
+### [5. Creación de un Bot de Telegram para la Consulta de Datos en Tiempo Real](./05)
+
+En esta práctica se desarrolló un **bot de Telegram** capaz de consultar los datos obtenidos desde **The Things Network (TTN)** mediante el protocolo **MQTT**, permitiendo al usuario acceder a la información de los sensores de forma remota y en tiempo real.  
+
+En la primera parte, se configuró el bot con el *Access Token* generado a través de **BotFather** y se verificó su correcto funcionamiento, mostrando el valor de temperatura recibido desde TTN mediante el comando `/getdata`. Posteriormente, se amplió la funcionalidad del bot para que también pudiera devolver los valores de **temperatura**, **humedad** y **luminosidad** de manera individual, utilizando los comandos `/gettemp`, `/gethum` y `/getlux`. Esta integración permitió ofrecer una interfaz sencilla e interactiva para la visualización de datos IoT directamente desde Telegram.

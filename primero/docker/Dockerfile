@@ -33,7 +33,10 @@ RUN apt-get remove -y nodejs libnode-dev npm || true && \
     npm install -g npm@latest
 
 # Instalar la librería paho-mqtt de forma global
-RUN pip3 install paho-mqtt
+RUN python3 -m pip install paho-mqtt
+
+# Instalar el paquete del bot de telegram
+RUN python3 -m pip install python-telegram-bot
 
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
