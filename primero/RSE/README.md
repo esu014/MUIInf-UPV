@@ -13,6 +13,7 @@ El laboratorio incluye una serie de ejercicios prácticos enfocados en los sigui
 - **MQTT** para la comunicación en tiempo real, aplicado a escenarios IoT (Internet of Things).  
 - **Ubidots** para el envío, almacenamiento y visualización de datos en la nube mediante MQTT.
 - **Telegram Bot** para la consulta remota de datos IoT en tiempo real a través de una interfaz de mensajería interactiva.
+- **InfluxDB y Grafana (TIG Stack)** para el procesamiento, almacenamiento y visualización avanzada de datos IoT mediante bases de datos temporales y paneles dinámicos.
 
 Cada práctica está documentada con explicaciones de los pasos realizados, los comandos utilizados y los resultados obtenidos.
 

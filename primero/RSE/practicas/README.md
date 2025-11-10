@@ -33,3 +33,7 @@ Posteriormente, se diseñó un **dashboard** para visualizar los datos mediante 
 En esta práctica se desarrolló un **bot de Telegram** capaz de consultar los datos obtenidos desde **The Things Network (TTN)** mediante el protocolo **MQTT**, permitiendo al usuario acceder a la información de los sensores de forma remota y en tiempo real.  
 
 En la primera parte, se configuró el bot con el *Access Token* generado a través de **BotFather** y se verificó su correcto funcionamiento, mostrando el valor de temperatura recibido desde TTN mediante el comando `/getdata`. Posteriormente, se amplió la funcionalidad del bot para que también pudiera devolver los valores de **temperatura**, **humedad** y **luminosidad** de manera individual, utilizando los comandos `/gettemp`, `/gethum` y `/getlux`. Esta integración permitió ofrecer una interfaz sencilla e interactiva para la visualización de datos IoT directamente desde Telegram.
+
+### [6. Procesamiento y Visualización de Datos con InfluxDB y Grafana](./06)
+
+En esta práctica se integró la pila **TIG (Telegraf, InfluxDB y Grafana)** para procesar y analizar datos procedentes de **The Things Network (TTN)**. Se configuraron los contenedores Docker necesarios, conectando Telegraf como consumidor MQTT, InfluxDB como base de datos temporal y Grafana como herramienta de visualización. Finalmente, se desarrolló un script en Python para consultar los datos de temperatura y humedad de los últimos minutos, y se creó un panel con distintos gráficos para su representación.
