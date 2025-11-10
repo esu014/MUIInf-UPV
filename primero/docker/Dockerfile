@@ -38,6 +38,9 @@ RUN python3 -m pip install paho-mqtt
 # Instalar el paquete del bot de telegram
 RUN python3 -m pip install python-telegram-bot
 
+# Instalar el paquete influxdb
+RUN python3 -m pip install influxdb
+
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
 VOLUME ["/home/root/"]
