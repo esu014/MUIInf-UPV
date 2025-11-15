@@ -37,3 +37,7 @@ En la primera parte, se configuró el bot con el *Access Token* generado a trav�
 ### [6. Procesamiento y Visualización de Datos con InfluxDB y Grafana](./06)
 
 En esta práctica se integró la pila **TIG (Telegraf, InfluxDB y Grafana)** para procesar y analizar datos procedentes de **The Things Network (TTN)**. Se configuraron los contenedores Docker necesarios, conectando Telegraf como consumidor MQTT, InfluxDB como base de datos temporal y Grafana como herramienta de visualización. Finalmente, se desarrolló un script en Python para consultar los datos de temperatura y humedad de los últimos minutos, y se creó un panel con distintos gráficos para su representación.
+
+### [7. Redes Docker y Descubrimiento de Servicios (RSE)](./07)
+
+En esta práctica se exploraron los conceptos fundamentales de las **redes Docker** y el **aislamiento de contenedores**. Se utilizaron redes *bridge* por defecto y redes *bridge* definidas por el usuario (`alpine-net`) para configurar distintos escenarios de comunicación entre contenedores. Se verificó que las redes de usuario habilitan el **descubrimiento automático de servicios** (resolución por nombre), mientras que la comunicación entre contenedores en redes separadas (como el *default bridge* y `alpine-net`) solo es posible **por dirección IP**. Finalmente, se comprobó que todos los tipos de contenedores (aislados o con doble conexión) tienen acceso a **Internet** a través de la funcionalidad NAT proporcionada por el Docker Host.
