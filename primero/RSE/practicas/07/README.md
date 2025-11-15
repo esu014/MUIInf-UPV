@@ -1,10 +1,6 @@
 # INFORME 7- Enrique Sopeña Urbano
 
----
-
 ## Pregunta 1
-
----
 
 ### Pasos ejecutados:
 
@@ -127,8 +123,6 @@ CTRL+p CTRL+q
 
 ## Pregunta 2
 
----
-
 ### Gateway
 
 La dirección IP asignada al *gateway* (puerta de enlace) es la que actúa como el punto de conexión entre el Docker host y la red *bridge* virtual. Esta información se encuentra dentro del bloque `IPAM -> Config`:
@@ -145,8 +139,6 @@ Las direcciones IP asignadas a los contenedores se encuentran dentro del bloque 
 - Dirección IP de `alpine2`: `172.17.0.5/16`
 
 ## Pregunta 3
-
----
 
 La determinación de la configuración IP y la conectividad de la red definida por el usuario `alpine-net` se realiza mediante el comando `docker network inspect alpine-net`. Este comando devuelve un objeto JSON que contiene los metadatos de la red, permitiendo la extracción de las variables de red relevantes.
 
@@ -171,8 +163,6 @@ La determinación de la configuración IP y la conectividad de la red definida p
 
 ## Pregunta 4
 
----
-
 Para una comprensión visual de la infraestructura de red configurada, se ha generado el siguiente diagrama que ilustra la disposición de los contenedores y sus respectivas conexiones a las redes Docker.
 
 Este esquema representa la segmentación de la red y la conectividad, diferenciando entre la red *bridge* por defecto y la red definida por el usuario `alpine-net`
@@ -180,8 +170,6 @@ Este esquema representa la segmentación de la red y la conectividad, diferencia
 ![diagrama-red.png](imagenes/diagrama-red.png)
 
 ## Pregunta 5
-
----
 
 La verificación del descubrimiento automático de servicios se realiza conectándose al contenedor `alpine1` y ejecutando el comando `ping` utilizando los nombres de los contenedores de destino (`alpine2` y `alpine4`), en lugar de sus direcciones IP explícitas.
 
@@ -221,8 +209,6 @@ Se confirma que, dentro de la red definida por el usuario `alpine-net`, el conte
 
 ## Pregunta 6
 
----
-
 La pregunta requiere verificar si el contenedor `alpine1` (conectado a `alpine-net`) puede comunicarse con `alpine3` (conectado solo al *default bridge*) utilizando la dirección IP de este último.
 
 ### Determinación de la Dirección IP de `alpine3`
@@ -259,8 +245,6 @@ Esto confirma que:
 La razón es que los contenedores en redes de usuario aisladas (como `alpine-net`) no tienen conectividad directa con los contenedores que solo están en la red *bridge* por defecto (`172.17.0.0/16`). La comunicación entre estas subredes solo es posible a través del *Docker Host* (a no ser que se configure explícitamente el *IP routing* o *IPTables* en el host, que no es el caso por defecto).
 
 ## Pregunta 7
-
----
 
 El contenedor `alpine4` está conectado a la red definida por el usuario `alpine-net` (`172.20.0.0/16`) y también a la red `bridge` por defecto (`172.17.0.0/16`). Esta doble conectividad le otorga un alcance total a todos los contenedores creados.
 
@@ -310,8 +294,6 @@ PING alpine2 (172.20.0.3): 56 data bytes
 La verificación de la conectividad desde el contenedor `alpine4` ha demostrado la importancia de las redes definidas por el usuario en Docker. Gracias a su doble conexión a la red `alpine-net` y a la red `bridge` por defecto, `alpine4` es el único contenedor con alcance total en la topología implementada. Se confirmó que la comunicación con contenedores en la misma red de usuario (`alpine1` y `alpine2`) es posible tanto por IP como por nombre, gracias al servicio de descubrimiento automático de servicios (DNS interno) que Docker proporciona en las redes de usuario. En contraste, la comunicación con el contenedor que reside únicamente en la red *bridge* por defecto (`alpine3`) solo es posible por IP (`172.17.0.2`), ya que la resolución de nombres no se extiende de forma automática a través de los límites de las redes, obligando a utilizar el direccionamiento explícito para alcanzar ese segmento aislado.
 
 ## Pregunta 8
-
----
 
 La prueba final de la práctica consistió en verificar la conectividad de los contenedores a Internet, independientemente de la configuración de red interna a la que estuvieran sujetos. La prueba se realizó con éxito desde tres tipos de contenedores: `alpine4` (doble conexión), `alpine3` (solo red *bridge* por defecto), y `alpine1` (solo red de usuario `alpine-net`).
 
