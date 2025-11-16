@@ -41,3 +41,7 @@ En esta práctica se integró la pila **TIG (Telegraf, InfluxDB y Grafana)** par
 ### [7. Redes Docker y Descubrimiento de Servicios (RSE)](./07)
 
 En esta práctica se exploraron los conceptos fundamentales de las **redes Docker** y el **aislamiento de contenedores**. Se utilizaron redes *bridge* por defecto y redes *bridge* definidas por el usuario (`alpine-net`) para configurar distintos escenarios de comunicación entre contenedores. Se verificó que las redes de usuario habilitan el **descubrimiento automático de servicios** (resolución por nombre), mientras que la comunicación entre contenedores en redes separadas (como el *default bridge* y `alpine-net`) solo es posible **por dirección IP**. Finalmente, se comprobó que todos los tipos de contenedores (aislados o con doble conexión) tienen acceso a **Internet** a través de la funcionalidad NAT proporcionada por el Docker Host.
+
+### [8. Dockerización de Aplicaciones y Clientes MQTT](./08)
+
+Esta práctica se centró en la **dockerización** de aplicaciones Python, cubriendo la creación de imágenes para un servicio web **Flask** y un cliente **MQTT Subscriber**. Se abordó la configuración de un `Dockerfile` desde cero, la gestión de dependencias específicas (librería `paho-mqtt` y paquetes Alpine), el diagnóstico de errores comunes de construcción (**PEP 668**) y la correcta configuración de puertos (**mapeo de puertos**) para el acceso externo al servicio web. Finalmente, se realizó el **push** de las imágenes al registro de **Docker Hub**.
