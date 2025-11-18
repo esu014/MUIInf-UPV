@@ -41,6 +41,11 @@ RUN python3 -m pip install python-telegram-bot
 # Instalar el paquete influxdb
 RUN python3 -m pip install influxdb
 
+# Instalar Go
+RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz && \
+    export PATH=$PATH:/usr/local/go/bin
+
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
 VOLUME ["/home/root/"]
@@ -54,6 +59,7 @@ Pip: $(pip3 --version)\n\
 Node: $(node -v)\n\
 NPM: $(npm -v)\n\
 Git: $(git --version)\n\
+go: $(go version) \n\
 " > /VERSIONS.txt
 
 # Comando por defecto
