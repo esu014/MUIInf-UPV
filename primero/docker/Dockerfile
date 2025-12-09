@@ -43,8 +43,9 @@ RUN python3 -m pip install influxdb
 
 # Instalar Go
 RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && \
-    tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz && \
-    export PATH=$PATH:/usr/local/go/bin
+    tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
