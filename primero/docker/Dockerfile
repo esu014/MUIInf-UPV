@@ -47,6 +47,13 @@ RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && \
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 
+# Instalar NATS CLI (nats)
+RUN wget https://github.com/nats-io/natscli/releases/latest/download/nats-0.1.7-linux-amd64.tar.gz -O /tmp/natscli.tar.gz && \
+    tar -xzf /tmp/natscli.tar.gz -C /tmp && \
+    mv /tmp/nats /usr/local/bin/nats && \
+    chmod +x /usr/local/bin/nats && \
+    rm /tmp/natscli.tar.gz
+
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
 VOLUME ["/home/root/"]
