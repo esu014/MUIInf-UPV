@@ -47,11 +47,15 @@ RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz && \
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 
-# Instalar NATS CLI (nats)
+# Instalar NATS CLI (nats) !! Version ARM (MacOs con Mx) <- OJO!!!
 RUN wget https://github.com/nats-io/natscli/releases/download/v0.3.0/nats-0.3.0-arm64.deb -O /tmp/natscli.deb && \
     apt-get update && \
     apt-get install -y /tmp/natscli.deb && \
     rm /tmp/natscli.deb
+
+# Instalar netcat-openbsd
+RUN apt update \ 
+    apt install -y netcat-openbsd
 
 # Directorio de trabajo y volumen persistente
 RUN mkdir -p /home/root/
