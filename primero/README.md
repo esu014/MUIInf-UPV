@@ -1,11 +1,35 @@
+>[!NOTE]
+> *Desarrollado y mantenido por: [esopurb](https://www.linkedin.com/in/esopurb/)*
+
+>[!WARNING]
+> Repositorio en desarrollo
 # Primer curso MUIInf
+
 Esta carpeta contiene todo el contenido realizado durante el primer curso del master del año 2025-2026
 
-## [COS](./COS)
+## 📚 Asignaturas
 
-## [RSE](./RSE)
+### [COS](./COS)
 
-## [SAD](./SAD)
+*Configuración y Optimización de Sistemas de cómputo.*
+
+>[!WARNING]
+>Pendiente de completar
+
+### [RSE](./RSE)
+
+*Redes y Seguridad*
+
+>[!WARNING]
+>Pendiente de completar
+
+### [SAD](./SAD)
+
+**Sistemas de Almacenamiento Distribuido.**
+Esta sección se centra en el diseño e implementación de sistemas de persistencia y replicación.
+
+* **Proyecto Principal:** Agente Orquestador para sincronización de almacenes Key-Value utilizando **NATS JetStream**.
+* **Hitos:** Implementación de consistencia eventual (LWW), estrategias híbridas de replicación y arquitecturas de Leafnodes.
 
 ## [Entorno Docker para el Máster](./docker)
 
