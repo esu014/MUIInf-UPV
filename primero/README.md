@@ -25,7 +25,7 @@ Esta carpeta contiene todo el contenido realizado durante el primer curso del ma
 
 ### [SAD](./SAD)
 
-**Sistemas de Almacenamiento Distribuido.**
+**Sistemas y Aplicaciones Distribuidas.**
 Esta sección se centra en el diseño e implementación de sistemas de persistencia y replicación.
 
 * **Proyecto Principal:** Agente Orquestador para sincronización de almacenes Key-Value utilizando **NATS JetStream**.
