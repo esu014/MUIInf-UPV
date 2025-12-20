@@ -1,6 +1,6 @@
-# SAD - Sistemas de Almacenamiento Distribuido (2025-2026)
+# SAD - Sistemas y Aplicaciones Distribuidas (2025-2026)
 
-Este repositorio centraliza todos los materiales, ejercicios prácticos y proyectos desarrollados durante la asignatura de **Sistemas de Almacenamiento Distribuido** en el curso académico 2025-2026.
+Este repositorio centraliza todos los materiales, ejercicios prácticos y proyectos desarrollados durante la asignatura de **Sistemas de Aplicaciones Distribuidas** en el curso académico 2025-2026.
 
 ## 📂 Contenidos del Repositorio
 
