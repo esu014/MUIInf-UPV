@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  # Servidor A (recibe leafnodes)
+  nats-a:
+    image: nats:latest
+    command: ["-js", "-c", "/etc/nats/nats.conf"]
+    ports:
+      - "4223:5222"   # Cliente
+      - "7423:7422"   # Leafnode
+    volumes:
+      - ./nats-a.conf:/etc/nats/nats.conf
+      - nats_a_data:/data            # <<--- PERSISTENCIA REAL
+    networks:
+      - nats-net
+
+  # Servidor B (connecta como leafnode al A)
+  nats-b:
+    image: nats:latest
+    command: ["-js", "-c", "/etc/nats/nats.conf"]
+    ports:
+      - "4224:5222"
+    volumes:
+      - ./nats-b.conf:/etc/nats/nats.conf
+      - nats_b_data:/data            # <<--- PERSISTENCIA REAL
+    networks:
+      - nats-net
+
+volumes:
+  nats_a_data:
+  nats_b_data:
+
+networks:
+  nats-net:
+    driver: bridge
