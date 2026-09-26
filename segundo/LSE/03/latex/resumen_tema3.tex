@@ -595,7 +595,8 @@ Se conserva la precisión interna hasta ajustar las cantidades; no es necesario 
         \bottomrule
     \end{tabularx}
 \end{center}
-\textbf{Nota:} El hecho de que $Q^*$ no caiga en el rango no significa que el tramo no sirva, sino que la fórmula no puede aplicarse en su punto ideal y tenemos que forzar la cantidad al mínimo exigido por el proveedor para "desbloquear" el descuento.
+
+\textbf{Nota:}  El hecho de que $Q^*$ no caiga en el rango no significa que el tramo no sirva, sino que la fórmula no puede aplicarse en su punto ideal y tenemos que forzar la cantidad al mínimo exigido por el proveedor para ``desbloquear'' el descuento.
 
 \paragraph{Paso 3: Comparativa de costes totales anuales.}
 Todos los costes de la tabla se expresan en USD/año.
@@ -632,6 +633,188 @@ Aunque el tramo 3 tiene un precio unitario menor, pasar de 1.000 a 2.000 unidade
     \item Comprobar su factibilidad y obtener los candidatos $Q_k$.
     \item Calcular el coste anual completo de cada candidato, incluida la adquisición.
     \item Elegir el menor coste y justificar por qué un precio unitario inferior puede no ser la mejor alternativa.
+\end{enumerate}
+
+
+\clearpage
+\subsection{Tipo 4: EOQ con Escasez Planificada (Faltantes Permitidos / Backorders)}
+Este modelo permite que las órdenes no servidas inmediatamente se acumulen como pedidos pendientes (\emph{backorders}), que se entregan cuando llega la mercancía. La demanda no satisfecha de inmediato se conserva: no se trata de ventas perdidas.
+
+\subsubsection{¿Cómo identificar un ejercicio de escasez planificada?}
+\textbf{Enunciado típico:} Aparece un coste unitario por faltante o penalización por tiempo de espera, denotado como $B$, $c_f$ o $c_r$, expresado en euros o USD por unidad y año.
+
+\textbf{Pistas clave:}
+\begin{itemize}
+    \item Se indica que se admiten faltantes, que los pedidos no servidos se acumulan para entregarse más tarde o que carecer de una unidad durante un año tiene un coste determinado.
+    \item Se pide calcular el inventario máximo, el faltante máximo o los tiempos con y sin existencias ($t_1$ y $t_2$).
+\end{itemize}
+Las fórmulas siguientes suponen demanda constante, recepción del lote de una vez, precio de compra constante y coste de faltante proporcional tanto a las unidades pendientes como al tiempo de espera. Una penalización fija por venta perdida o por evento de ruptura exige otro modelo.
+
+\subsubsection{Razonamiento económico: ¿por qué permitir escasez?}
+Mantener mercancía cuesta dinero ($c_p$ o $h$). Si la penalización por retrasar la entrega ($B$) es tolerable y no se pierde la venta, el modelo permite reducir el inventario medio a cambio de un coste de faltante.
+
+Al optimizar conjuntamente lote y faltante máximo, el coste combinado de emisión, posesión y escasez resulta menor que el del EOQ clásico con los mismos parámetros positivos y un $B$ finito. La duración de la fase de escasez depende de la relación entre $c_p$ y $B$: no tiene por qué ser siempre pequeña.
+
+\subsubsection{Disección paso a paso de la resolución}
+\paragraph{Paso 1: Calcular el lote económico con escasez.}
+\[
+    Q^{*}=\sqrt{\frac{2c_eD}{c_p}\left(\frac{c_p+B}{B}\right)}
+\]
+La equivalencia con la notación utilizada anteriormente es $c_e=K$ y $c_p=h$. Comparando con el EOQ clásico:
+\[
+    Q_{\text{clásico}}^{*}=\sqrt{\frac{2c_eD}{c_p}},
+    \qquad
+    Q^{*}=Q_{\text{clásico}}^{*}\sqrt{\frac{c_p+B}{B}}.
+\]
+Para $c_p>0$ y $0<B<\infty$, el factor multiplicador es mayor que uno. El lote óptimo es mayor porque parte de la entrega se destina inmediatamente a atender pedidos atrasados y solo el resto se almacena. Cuando la penalización $B$ crece sin límite, la solución se aproxima al modelo sin escasez.
+
+\paragraph{Paso 2: Calcular el inventario máximo y el faltante máximo.}
+Cada lote se divide entre las unidades que liquidan la escasez acumulada y las que quedan en estantería:
+\begin{align*}
+    I_{\max} & =Q^{*}\frac{B}{c_p+B}, \\
+    F^{*}    & =Q^{*}-I_{\max}
+    =Q^{*}\frac{c_p}{c_p+B}.
+\end{align*}
+Se cumple $I_{\max}+F^{*}=Q^{*}$. El símbolo $F^{*}$ representa el mismo faltante máximo que $S^{*}$ en el apartado teórico. El inventario máximo se alcanza inmediatamente después de recibir el lote y servir los pedidos pendientes; el faltante máximo, inmediatamente antes de esa recepción.
+
+\paragraph{Paso 3: Descomponer los tiempos del ciclo.}
+\[
+    T_r=\frac{Q^{*}}{D},\qquad
+    t_1=\frac{I_{\max}}{D},\qquad
+    t_2=\frac{F^{*}}{D},\qquad
+    T_r=t_1+t_2.
+\]
+\begin{itemize}
+    \item \textbf{Fase $t_1$, con inventario:} Desde la recepción hasta que se agotan las existencias físicas.
+    \item \textbf{Fase $t_2$, sin inventario:} Las estanterías están vacías y se acumulan pedidos pendientes.
+\end{itemize}
+Si $D$ está en unidades/año, estos tiempos se obtienen en años. Para convertirlos a días operativos se multiplican por $t$, usando la base anual indicada en el enunciado.
+\[
+    \frac{t_1}{T_r}=\frac{B}{c_p+B},
+    \qquad
+    \frac{t_2}{T_r}=\frac{c_p}{c_p+B}.
+\]
+
+\paragraph{Paso 4: Calcular los costes totales anuales.}
+\begin{align*}
+    CT & =C_a+C_e+C_p+C_f,        \\
+    CT & =c_cD+c_e\frac{D}{Q^{*}}
+    +c_p\frac{I_{\max}^{2}}{2Q^{*}}
+    +B\frac{(F^{*})^{2}}{2Q^{*}}.
+\end{align*}
+Los promedios sobre el \textbf{ciclo completo}, incluyendo ambas fases, son:
+\[
+    \bar{I}=\frac{I_{\max}^{2}}{2Q^{*}},
+    \qquad
+    \bar{F}=\frac{(F^{*})^{2}}{2Q^{*}}.
+\]
+Se obtienen dividiendo el área triangular de cada fase entre la duración total del ciclo. No deben confundirse con $I_{\max}/2$ y $F^{*}/2$, que son los promedios calculados únicamente dentro de sus respectivas fases.
+
+\textbf{Comprobación en el óptimo:} El coste de emisión coincide con la suma de posesión y faltante:
+\[
+    C_e=C_p+C_f.
+\]
+
+\subsubsection{Ejemplo práctico diseccionado}
+El material proporcionado atribuye este ejemplo a las transparencias de la asignatura.
+
+\textbf{Datos de entrada:}
+\begin{itemize}
+    \item $D=4\,800$ unidades/año.
+    \item $c_e=K=50$ USD/pedido.
+    \item $c_p=h=4$ USD/(unidad $\cdot$ año).
+    \item $B=12$ USD/(unidad $\cdot$ año).
+\end{itemize}
+
+\paragraph{Lote óptimo con escasez.}
+\[
+    Q^{*}=\sqrt{\frac{2\cdot50\cdot4\,800}{4}
+        \left(\frac{4+12}{12}\right)}
+    =\sqrt{160\,000}
+    =\boxed{400\ \text{unidades}}.
+\]
+Sin escasez, el lote sería
+\[
+    Q_{\text{clásico}}^{*}=\sqrt{120\,000}
+    \approx346{,}41\ \text{unidades}.
+\]
+
+\paragraph{Inventario máximo y faltante máximo.}
+\[
+    I_{\max}=400\frac{12}{4+12}
+    =\boxed{300\ \text{unidades}},
+    \qquad
+    F^{*}=400-300=\boxed{100\ \text{unidades}}.
+\]
+De cada recepción de 400 unidades, 100 se entregan inmediatamente a los clientes pendientes y 300 quedan disponibles en almacén.
+
+\paragraph{Tiempos del ciclo y número de pedidos.}
+\begin{align*}
+    N=f & =\frac{4\,800}{400}=12\ \text{pedidos/año},   \\
+    T_r & =\frac{400}{4\,800}=\frac{1}{12}\ \text{año}, \\
+    t_1 & =\frac{300}{4\,800}=0{,}0625\ \text{años},    \\
+    t_2 & =\frac{100}{4\,800}=\frac{1}{48}\ \text{año}
+    \approx0{,}020833\ \text{años}.
+\end{align*}
+Hay existencias durante el 75\% del ciclo y escasez durante el 25\%. No se fija un número de días al no haberse indicado la base anual operativa.
+
+\paragraph{Inventario medio y faltante medio.}
+\[
+    \bar{I}=\frac{300^2}{2\cdot400}=112{,}5\ \text{unidades},
+    \qquad
+    \bar{F}=\frac{100^2}{2\cdot400}=12{,}5\ \text{unidades}.
+\]
+
+\paragraph{Estructura del coste anual operativo, sin adquisición.}
+\begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{@{}llr@{}}
+        \toprule
+        Concepto                 & Cálculo                 & Coste (USD/año) \\
+        \midrule
+        Emisión                  & $50(4\,800/400)$        & 600             \\
+        Posesión                 & $4(300^2/(2\cdot400))$  & 450             \\
+        Faltante                 & $12(100^2/(2\cdot400))$ & 150             \\
+        \midrule
+        \textbf{Total operativo} & $600+450+150$           & \textbf{1.200}  \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+Se verifica que $600=450+150$. Como no se proporciona el precio unitario $c_c$, el coste con adquisición se mantiene expresado como
+\[
+    CT=c_cD+1\,200\ \text{USD/año}.
+\]
+
+\paragraph{Comparación con el EOQ clásico.}
+En el modelo clásico, el coste operativo óptimo es
+\[
+    C_{\mathrm{op,clásico}}^{*}
+    =\sqrt{2c_eDc_p}
+    =\sqrt{2\cdot50\cdot4\,800\cdot4}
+    \approx1\,385{,}64\ \text{USD/año}.
+\]
+La raíz ya incluye emisión y posesión; no debe multiplicarse nuevamente por dos. Con escasez planificada:
+\[
+    C_{\mathrm{op,escasez}}^{*}
+    =\sqrt{\frac{2c_eDc_pB}{c_p+B}}
+    =1\,200\ \text{USD/año}.
+\]
+El ahorro anual es, por tanto,
+\[
+    1\,385{,}64-1\,200
+    =\boxed{185{,}64\ \text{USD/año}}.
+\]
+El coste de adquisición es el mismo en ambas alternativas y no modifica esta diferencia.
+
+\paragraph{Estructura de respuesta para el examen.}
+\begin{enumerate}
+    \item Confirmar que la demanda no atendida se acumula y que la penalización depende del tiempo.
+    \item Homogeneizar las unidades de $D$, $c_p$ y $B$.
+    \item Calcular $Q^{*}$, $I_{\max}$ y $F^{*}$.
+    \item Calcular $T_r$, $t_1$ y $t_2$ con una base temporal coherente.
+    \item Obtener los inventarios medios sobre el ciclo completo y calcular los costes.
+    \item Verificar $I_{\max}+F^{*}=Q^{*}$, $t_1+t_2=T_r$ y, en el óptimo continuo, $C_e=C_p+C_f$.
+    \item Comparar con el EOQ clásico si se solicita e incluir adquisición solo cuando se disponga de su precio, o dejarla expresada simbólicamente.
 \end{enumerate}
 
 \clearpage
@@ -749,6 +932,24 @@ Este anexo reúne los símbolos de las fórmulas de la guía. Se utiliza \textbf
     \bottomrule
 \end{longtable}
 El superíndice $(k)$ identifica un tramo; no representa una potencia. La expresión $\operatorname*{arg\,min}$ indica la cantidad que proporciona el menor valor de la función de coste, no el propio coste mínimo.
+
+
+\subsection{Notaciones adicionales de escasez planificada}
+\begin{longtable}{@{}p{2.8cm}p{7.2cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo                       & Significado y equivalencia                                                                                           & Unidades             \\
+    \midrule
+    \endhead
+    $c_f$, $c_r$                  & Coste de faltante por unidad y año; equivalen a $B$ en este modelo. Son parámetros unitarios, no costes totales.     & u.m./(u $\cdot$ año) \\
+    $F^{*}$                       & Faltante máximo óptimo; equivale a $S^{*}$.                                                                          & u                    \\
+    $\bar{F}$                     & Número medio de unidades pendientes, promediado sobre todo el ciclo.                                                 & u                    \\
+    $C_f$                         & Coste anual de faltantes: $C_f=B\bar{F}$. Equivale a $C_r$ cuando este designa el coste total de escasez del modelo. & u.m./año             \\
+    $Q_{\text{clásico}}^{*}$      & Lote óptimo del modelo de referencia sin escasez.                                                                    & u/pedido             \\
+    $C_{\mathrm{op,clásico}}^{*}$ & Coste operativo anual óptimo sin escasez: emisión más posesión, sin adquisición.                                     & u.m./año             \\
+    $C_{\mathrm{op,escasez}}^{*}$ & Coste operativo anual óptimo con escasez: emisión, posesión y faltantes, sin adquisición.                            & u.m./año             \\
+    \bottomrule
+\end{longtable}
+La notación $I_{\text{máx}}$ del enunciado equivale a $I_{\max}$ en esta guía. Los símbolos $t_1$, $t_2$, $T_r$, $B$ y $\bar{I}$ se recogen en las tablas anteriores. En el modelo con escasez, $\bar{I}$ promedia el stock físico sobre todo el ciclo, incluyendo el periodo en que vale cero.
 
 \subsection{Convenciones matemáticas}
 \begin{itemize}
