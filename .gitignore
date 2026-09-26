@@ -11,6 +11,7 @@
 *.fls
 *.log
 *.synctex.gz
+*.synctex
 *.out
 *.toc
 *.bbl
