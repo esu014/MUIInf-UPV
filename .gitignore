@@ -1,8 +1,27 @@
+# macOS
 .DS_Store
+
+# Environment variables
 .env
-# latex
-.aux
-.fdb_latexmk
-.fls
-.log
-.synctex.gz
+.env.local
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.out
+*.toc
+*.bbl
+*.blg
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+
+# R
+*.RData
+*.Rhistory
+.Rproj.user/
