@@ -484,6 +484,155 @@ No se proporciona el precio unitario de compra $c_c$, por lo que no puede calcul
     \item Comprobar que en el óptimo coinciden el coste de emisión y el de posesión del stock de ciclo; redondear solo al final.
 \end{enumerate}
 
+
+\clearpage
+\subsection{Tipo 3: EOQ con Descuentos por Cantidad}
+
+\subsubsection{¿Cómo identificar un ejercicio de descuentos por cantidad?}
+\textbf{Enunciado típico:} Se presenta una tabla de tramos de precios según el tamaño del lote: por ejemplo, hasta 999 unidades a 5,00 euros/unidad, de 1.000 a 1.999 a 4,80 euros/unidad y desde 2.000 a 4,75 euros/unidad.
+
+\textbf{Pistas clave:}
+\begin{itemize}
+    \item El precio de adquisición ($c_c$ o $P$) depende de la cantidad $Q$ solicitada en cada pedido.
+    \item Si el coste de posesión se expresa como una tasa $i$ sobre el precio, también cambia en cada tramo:
+          \[
+              c_p^{(k)}=i\,c_c^{(k)}.
+          \]
+    \item Si el coste de posesión se da directamente como un importe fijo por unidad y año, no debe modificarse por el solo hecho de cambiar el precio.
+\end{itemize}
+
+\textbf{Dos modalidades posibles:}
+\begin{itemize}
+    \item \textbf{Descuento en todas las unidades (all-units):} Al alcanzar el mínimo del tramo, el precio reducido se aplica a todas las unidades del lote.
+    \item \textbf{Descuento incremental:} El precio reducido se aplica únicamente a las unidades que exceden el umbral correspondiente.
+\end{itemize}
+El procedimiento siguiente corresponde a descuentos en \textbf{todas las unidades}, sin escasez. No debe aplicarse directamente a descuentos incrementales: en estos, el coste de compra de un lote se calcula sumando las unidades de cada bloque a su precio respectivo.
+
+\subsubsection{Disección paso a paso: descuentos en todas las unidades}
+\paragraph{Paso 1: Calcular el lote económico teórico para cada tramo.}
+Para cada tramo $k$, usar el coste de posesión que le corresponde:
+\[
+    Q_k^{*}=\sqrt{\frac{2c_eD}{c_p^{(k)}}}.
+\]
+Si la posesión depende del precio, primero se calcula $c_p^{(k)}=i c_c^{(k)}$.
+
+\textbf{¿Por qué se hace así?} Se obtiene el mínimo de la curva de costes que resultaría si ese precio pudiera aplicarse a cualquier cantidad. Este lote es teórico: todavía hay que comprobar que permite acceder al precio utilizado.
+
+\paragraph{Paso 2: Comprobar la factibilidad y ajustar la cantidad.}
+Sean $L_k$ y $U_k$ los límites inferior y superior del tramo, respetando los extremos incluidos o excluidos que indique el enunciado.
+\begin{itemize}
+    \item \textbf{Si $Q_k^{*}$ está dentro del tramo:} Es factible; el candidato continuo es $Q_k=Q_k^{*}$.
+    \item \textbf{Si $Q_k^{*}<L_k$:} No alcanza el mínimo para obtener ese precio. Se ajusta al límite inferior: $Q_k=L_k$.
+    \item \textbf{Si $Q_k^{*}$ supera el límite superior:} El lote teórico no es factible en ese tramo. En el modelo habitual de precios decrecientes y posesión constante o proporcional al precio, ese tramo puede descartarse al comparar con los posteriores más baratos. Si el enunciado introduce costes de posesión independientes que aumentan en otros tramos, debe evaluarse también el extremo superior admisible: el descarte ya no está garantizado.
+\end{itemize}
+\textbf{¿Por qué se ajusta al límite inferior?} A la derecha del mínimo teórico, el coste aumenta con $Q$. Por tanto, si todo el tramo queda a la derecha de ese mínimo, su mejor cantidad es la primera que permite acceder al descuento.
+
+\textbf{Unidades indivisibles:} No se redondea siempre hacia arriba un EOQ interior. Se comparan los enteros factibles inmediatamente inferior y superior al mínimo teórico. En este ejemplo, los candidatos ajustados ya son enteros. Un lote debe ser positivo: el cero que aparece en algunas tablas de precios no es una cantidad de pedido evaluable.
+
+\paragraph{Paso 3: Comparar los costes totales de los candidatos.}
+Para cada cantidad factible $Q_k$:
+\begin{align*}
+    CT(Q_k)
+     & =C_a+C_e+C_p \\
+     & =c_c^{(k)}D
+    +c_e\frac{D}{Q_k}
+    +c_p^{(k)}\frac{Q_k}{2}.
+\end{align*}
+Se selecciona la cantidad con el menor coste total anual global:
+\[
+    Q_{\mathrm{opt}}\in\operatorname*{arg\,min}_{Q_k}CT(Q_k).
+\]
+\textbf{Clave:} El coste de adquisición debe incluirse: a diferencia del EOQ con precio único, cambia entre alternativas. No basta con elegir el precio unitario más bajo ni con comparar solo emisión y posesión.
+
+La fórmula anterior no incluye stock de seguridad. Si el enunciado exige una reserva fija $SS$, se utiliza $c_p^{(k)}(Q_k/2+SS)$ como coste de posesión; cuando $c_p^{(k)}$ cambia, ese coste de reserva también influye en la comparación entre tramos.
+
+\subsubsection{Ejemplo práctico diseccionado}
+El material proporcionado presenta el siguiente caso como un ejercicio de examen de la asignatura.
+
+\textbf{Datos:}
+\begin{itemize}
+    \item Demanda anual: $D=5\,000$ unidades/año.
+    \item Coste de emisión: $c_e=49$ USD/pedido.
+    \item Tasa anual de posesión: $r=i=0{,}20$ (20\% anual).
+    \item Descuentos en todas las unidades; sin stock de seguridad indicado.
+\end{itemize}
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}clrr@{}}
+        \toprule
+        Tramo & Cantidad por pedido & $c_c^{(k)}$ & $c_p^{(k)}=r c_c^{(k)}$ \\
+              & (unidades)          & (USD/u)     & (USD/(u $\cdot$ año))   \\
+        \midrule
+        1     & 1 a 999             & 5,00        & 1,00                    \\
+        2     & 1.000 a 1.999       & 4,80        & 0,96                    \\
+        3     & 2.000 o más         & 4,75        & 0,95                    \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\paragraph{Paso 1: Lotes económicos teóricos.}
+\begin{align*}
+    Q_1^{*} & =\sqrt{\frac{2\cdot49\cdot5\,000}{1{,}00}}
+    =\sqrt{490\,000}=700,                                \\
+    Q_2^{*} & =\sqrt{\frac{2\cdot49\cdot5\,000}{0{,}96}}
+    \approx714{,}43,                                     \\
+    Q_3^{*} & =\sqrt{\frac{2\cdot49\cdot5\,000}{0{,}95}}
+    \approx718{,}18.
+\end{align*}
+Se conserva la precisión interna hasta ajustar las cantidades; no es necesario redondear previamente a 715 y 719.
+
+\paragraph{Paso 2: Factibilidad y ajustes.}
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{@{}crXr@{}}
+        \toprule
+        Tramo & $Q_k^{*}$ & Comprobación                                 & $Q_k$ (u) \\
+        \midrule
+        1     & 700       & Está dentro de 1--999: factible.             & 700       \\
+        2     & 714,43    & Está por debajo de 1.000: ajustar al mínimo. & 1.000     \\
+        3     & 718,18    & Está por debajo de 2.000: ajustar al mínimo. & 2.000     \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+
+\paragraph{Paso 3: Comparativa de costes totales anuales.}
+Todos los costes de la tabla se expresan en USD/año.
+\begin{center}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}crrrrr@{}}
+        \toprule
+        Tramo & $Q_k$ (u) & Adquisición & Emisión & Posesión & $CT$               \\
+        \midrule
+        1     & 700       & 25.000,00   & 350,00  & 350,00   & 25.700,00          \\
+        2     & 1.000     & 24.000,00   & 245,00  & 480,00   & \textbf{24.725,00} \\
+        3     & 2.000     & 23.750,00   & 122,50  & 950,00   & 24.822,50          \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Por ejemplo, para el tramo 2:
+\[
+    CT(1\,000)=4{,}80\cdot5\,000
+    +49\frac{5\,000}{1\,000}
+    +0{,}96\frac{1\,000}{2}
+    =24\,725\ \text{USD/año}.
+\]
+\textbf{Conclusión:} Conviene pedir \textbf{1.000 unidades por lote}, aprovechando el tramo 2, con un coste total anual mínimo de \textbf{24.725 USD}.
+
+Aunque el tramo 3 tiene un precio unitario menor, pasar de 1.000 a 2.000 unidades ahorra 250 USD/año en adquisición y 122,50 USD/año en emisión, pero aumenta la posesión en 470 USD/año. El saldo es un incremento de 97,50 USD/año en el coste total; por eso no compensa.
+
+\paragraph{Estructura de respuesta para el examen.}
+\begin{enumerate}
+    \item Identificar si el descuento es en todas las unidades o incremental.
+    \item Homogeneizar unidades y determinar el coste de posesión de cada tramo.
+    \item Calcular los lotes teóricos $Q_k^{*}$.
+    \item Comprobar su factibilidad y obtener los candidatos $Q_k$.
+    \item Calcular el coste anual completo de cada candidato, incluida la adquisición.
+    \item Elegir el menor coste y justificar por qué un precio unitario inferior puede no ser la mejor alternativa.
+\end{enumerate}
+
 \clearpage
 \appendix
 \section{Leyenda de símbolos y unidades}
@@ -579,6 +728,26 @@ Este anexo reúne los símbolos de las fórmulas de la guía. Se utiliza \textbf
     \bottomrule
 \end{longtable}
 \textbf{Unidades y etiquetas:} ud o u significa unidad física; Tm significa tonelada métrica y kg, kilogramo. El símbolo $P$ como precio de compra no es la etiqueta del sistema de revisión periódica P. La expresión $\operatorname{int}(T_s/T_r)$, para estos tiempos no negativos, designa la parte entera $\lfloor T_s/T_r\rfloor$.
+
+
+\subsection{Notaciones adicionales de descuentos por cantidad}
+\begin{longtable}{@{}p{2cm}p{8cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo            & Significado                                                                                             & Unidades             \\
+    \midrule
+    \endhead
+    $k$                & Índice del tramo de precios.                                                                            & Sin unidades         \\
+    $c_c^{(k)}$        & Precio unitario de adquisición aplicable al tramo $k$.                                                  & u.m./u               \\
+    $c_p^{(k)}$        & Coste unitario anual de posesión en el tramo $k$. Si depende del precio: $c_p^{(k)}=i c_c^{(k)}$.       & u.m./(u $\cdot$ año) \\
+    $Q_k^{*}$          & Lote económico teórico del tramo $k$, antes de comprobar su factibilidad.                               & u/pedido             \\
+    $Q_k$              & Cantidad candidata factible del tramo $k$, después de los ajustes.                                      & u/pedido             \\
+    $L_k$, $U_k$       & Límites inferior y superior de cantidad del tramo $k$. El último puede no tener límite superior finito. & u/pedido             \\
+    $r$                & Tasa anual de posesión, equivalente a $i$ en el ejemplo de descuentos. No es el subíndice de $T_r$.     & año$^{-1}$           \\
+    $CT(Q_k)$          & Coste total anual evaluado para la cantidad candidata $Q_k$ y su precio aplicable.                      & u.m./año             \\
+    $Q_{\mathrm{opt}}$ & Cantidad de pedido elegida tras comparar todos los candidatos.                                          & u/pedido             \\
+    \bottomrule
+\end{longtable}
+El superíndice $(k)$ identifica un tramo; no representa una potencia. La expresión $\operatorname*{arg\,min}$ indica la cantidad que proporciona el menor valor de la función de coste, no el propio coste mínimo.
 
 \subsection{Convenciones matemáticas}
 \begin{itemize}
