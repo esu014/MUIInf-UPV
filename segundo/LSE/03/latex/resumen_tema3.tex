@@ -326,6 +326,164 @@ El material proporcionado presenta este caso como el Ejercicio 3 del examen de c
     \item Comprobar que el último acumulado es 100\% y que las tres clases contienen todas las referencias.
 \end{enumerate}
 
+
+\clearpage
+\subsection{Tipo 2: EOQ Clásico (Lote Económico de Pedido sin Escasez)}
+
+\subsubsection{¿Cómo identificar un ejercicio de EOQ Clásico?}
+\textbf{Enunciado típico:} Se proporciona la demanda de un único artículo en un horizonte temporal determinado (por ejemplo, $D=20\ \text{Tm/año}$ o $D=900\ \text{ud/año}$), el coste fijo de emitir un pedido ($c_e$) y el coste unitario de mantener o almacenar el producto ($c_p$).
+
+\textbf{Equivalencia con la notación de la teoría:}
+\[
+    c_e=K,\qquad c_p=h,\qquad c_c=P=c_a,\qquad f=N.
+\]
+Aquí $c_c$ o $P$ designan el precio unitario de compra y $f$ el número de pedidos por año. No deben confundirse $c_e$ y $c_p$ (costes unitarios) con $C_e$ y $C_p$ (costes anuales totales).
+
+\textbf{Pistas clave de exclusión:}
+\begin{itemize}
+    \item No se permite escasez y no se menciona un coste por faltantes o pérdidas de venta.
+    \item El precio unitario de compra ($c_c$ o $P$) es único y constante: no hay descuentos por cantidad.
+    \item La demanda es constante y conocida con certeza durante todo el periodo.
+\end{itemize}
+La reposición del lote se recibe de una vez; puede existir un plazo de suministro conocido. Si el enunciado impone un stock de seguridad, se incorpora como una reserva fija.
+
+\subsubsection{Paso previo obligatorio: homogeneización de unidades}
+Antes de aplicar cualquier fórmula, verificar las unidades temporales y físicas:
+\begin{itemize}
+    \item \textbf{Unidades temporales:} Si $D$ está en unidades/año, $c_p$ debe estar en euros por unidad y año. Si la demanda es mensual, se trabaja con meses para todos los parámetros o se convierte la demanda a anual.
+    \item \textbf{Coste de almacenamiento en porcentaje:} Si se proporciona una tasa anual $i$ sobre el precio de compra, se calcula
+          \[
+              c_p=i\cdot c_c.
+          \]
+          La tasa se introduce en tanto por uno: por ejemplo, $20\%=0{,}20$ por año. En este contexto $i$ es una tasa de posesión, no el índice de artículo utilizado en ABC.
+    \item \textbf{Unidades de masa o medida:} Si $D$ está en toneladas y $c_p$ está referido al kilogramo, convertir ambos a la misma magnitud; $1\ \text{Tm}=1\,000\ \text{kg}$.
+\end{itemize}
+
+\subsubsection{Disección paso a paso de la resolución}
+\paragraph{Paso 1: Calcular el lote económico de pedido.}
+\[
+    Q^{*}=\sqrt{\frac{2\cdot c_e\cdot D}{c_p}}
+\]
+\textbf{Razonamiento:} La fórmula de Wilson equilibra el coste anual de emisión y el coste anual de posesión del stock de ciclo:
+\[
+    c_e\frac{D}{Q^{*}}=c_p\frac{Q^{*}}{2}.
+\]
+Pedir un lote mayor reduce los costes de pedido, pero aumenta los costes de almacén. Pedir un lote menor incrementa los gastos de emisión al realizar demasiados pedidos.
+
+\textbf{Si existe stock de seguridad fijo:} El término adicional $c_p SS$ no depende de $Q$, de modo que no modifica $Q^{*}$. En ese caso, $C_e$ coincide con el coste de posesión del stock de ciclo, no con el coste de posesión total que incluye la reserva.
+
+\paragraph{Paso 2: Calcular el número de pedidos y el tiempo de reaprovisionamiento.}
+\[
+    f=N=\frac{D}{Q^{*}}
+\]
+Si se necesitan $D$ unidades al año y se pide de $Q^{*}$ en $Q^{*}$, la división indica cuántos pedidos se realizan por año.
+\[
+    T_r=\frac{t}{f}
+\]
+Con $t=365$ días operativos/año, $T_r=365/f$ días. Si el examen establece 250 días laborables, se utiliza $t=250$. También puede calcularse $T_r=Q^{*}/D$ en años.
+
+\paragraph{Paso 3: Calcular el punto de pedido.}
+Determinar cuándo emitir la orden para que el pedido llegue antes de agotar las existencias disponibles para el consumo.
+
+\textbf{Caso A: plazo de suministro menor que el ciclo ($T_s<T_r$).}
+\[
+    P_p=T_s\frac{D}{t}+SS
+\]
+Durante los $T_s$ días que tarda el proveedor se consume a ritmo de $D/t$. Se pide cuando quedan las unidades necesarias para cubrir ese consumo más la reserva $SS$.
+
+\textbf{Caso B: plazo de suministro mayor que el ciclo ($T_s>T_r$).}
+En la formulación de stock físico de la guía, se descuentan los ciclos completos incluidos en el plazo de suministro:
+\[
+    E=\left\lfloor\frac{T_s}{T_r}\right\rfloor,\qquad
+    P_p=(T_s-E T_r)\frac{D}{t}+SS.
+\]
+Los pedidos en tránsito cubren la parte del plazo correspondiente a esos ciclos completos. Es necesario tenerlos en cuenta para interpretar el nivel físico de activación.
+
+\textbf{Caso límite y convención de medida ($T_s=T_r$):} La fórmula simple da $Q^{*}+SS$, mientras que la fórmula con parte entera da $SS$ porque $E=1$. Estos niveles físicos corresponden a momentos distintos alrededor de una recepción: justo después o justo antes de recibir un lote. Cuando emisión y recepción coinciden, se debe seguir la convención de eventos del ejercicio. La misma precaución se aplica si $T_s$ es un múltiplo exacto de $T_r$.
+
+\textbf{Distinción útil: posición de inventario.} Si el control se realiza sobre existencias más pedidos en tránsito menos pedidos pendientes de servir, el umbral es
+\[
+    R=T_s\frac{D}{t}+SS
+\]
+para cualquier plazo de suministro. $R$ se refiere a la posición de inventario; no debe confundirse con el umbral de stock físico reducido por ciclos completos.
+
+\paragraph{Paso 4: Calcular los costes totales anuales.}
+\begin{align*}
+    C_a & = c_c D,                              \\
+    C_e & = c_e\frac{D}{Q^{*}},                 \\
+    C_p & = c_p\left(\frac{Q^{*}}{2}+SS\right), \\
+    CT  & = C_a+C_e+C_p.
+\end{align*}
+El inventario medio es $\bar{I}=Q^{*}/2+SS$. Al ser constante el precio de compra, $C_a$ no cambia el lote óptimo, pero debe incluirse cuando se pide el coste total con adquisición.
+
+\subsubsection{Ejemplo práctico diseccionado: ejercicio Caramelos}
+\textbf{Datos de entrada:}
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{@{}lX@{}}
+        \toprule
+        Parámetro                    & Valor                     \\
+        \midrule
+        Demanda anual ($D$)          & 900 ud/año                \\
+        Coste de emisión ($c_e$)     & 500 euros/pedido          \\
+        Coste de posesión ($c_p$)    & 10 euros/(ud $\cdot$ año) \\
+        Tiempo de suministro ($T_s$) & 10 días                   \\
+        Stock de seguridad ($SS$)    & 50 unidades               \\
+        Año operativo ($t$)          & 365 días/año              \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+
+\paragraph{Lote óptimo.}
+\[
+    Q^{*}=\sqrt{\frac{2\cdot500\cdot900}{10}}
+    =\sqrt{90\,000}=300\ \text{unidades}
+\]
+
+\paragraph{Número de pedidos al año.}
+\[
+    f=\frac{900}{300}=3\ \text{pedidos/año}
+\]
+
+\paragraph{Tiempo entre pedidos.}
+\[
+    T_r=\frac{365}{3}\approx121{,}67\ \text{días}
+\]
+
+\paragraph{Punto de pedido.}
+Como $T_s=10$ días es menor que $T_r\approx121{,}67$ días, se aplica el caso A:
+\[
+    P_p=10\left(\frac{900}{365}\right)+50
+    \approx24{,}6575+50
+    \approx74{,}66\ \text{unidades}.
+\]
+Para unidades indivisibles, se redondea hacia arriba: \textbf{emitir el pedido al alcanzar 75 unidades}. El cálculo mantiene toda la precisión hasta el resultado final.
+
+\paragraph{Costes anuales e inventario medio.}
+\begin{align*}
+    \bar{I} & = \frac{300}{2}+50=200\ \text{unidades},                    \\
+    C_e     & = 500\frac{900}{300}=1\,500\ \text{euros/año},              \\
+    C_p     & = 10\left(\frac{300}{2}+50\right)=2\,000\ \text{euros/año}.
+\end{align*}
+Los 2.000 euros de posesión se descomponen en 1.500 euros del stock de ciclo y 500 euros del stock de seguridad. Por tanto,
+\[
+    C_e+C_p=3\,500\ \text{euros/año}.
+\]
+No se proporciona el precio unitario de compra $c_c$, por lo que no puede calcularse numéricamente el coste de adquisición. Con los datos disponibles:
+\[
+    C_a=c_c D,\qquad CT=c_c D+3\,500\ \text{euros/año}.
+\]
+
+\paragraph{Estructura de respuesta para el examen.}
+\begin{enumerate}
+    \item Identificar el modelo sin escasez y sin descuentos por cantidad.
+    \item Homogeneizar unidades; calcular $c_p=i c_c$ si procede.
+    \item Calcular $Q^{*}$, $f$ y $T_r$.
+    \item Comparar $T_s$ y $T_r$ y calcular el punto de pedido con la convención indicada.
+    \item Calcular el inventario medio y los costes de adquisición, emisión y posesión.
+    \item Comprobar que en el óptimo coinciden el coste de emisión y el de posesión del stock de ciclo; redondear solo al final.
+\end{enumerate}
+
 \clearpage
 \appendix
 \section{Leyenda de símbolos y unidades}
@@ -405,6 +563,23 @@ Este anexo reúne los símbolos de las fórmulas de la guía. Se utiliza \textbf
     \bottomrule
 \end{longtable}
 
+
+\subsection{Notaciones adicionales del EOQ clásico}
+\begin{longtable}{@{}p{2cm}p{8cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo      & Significado y equivalencia                                                                                        & Unidades             \\
+    \midrule
+    \endhead
+    $c_e$        & Coste fijo de emitir un pedido; equivale a $K$.                                                                   & u.m./pedido          \\
+    $c_p$        & Coste de posesión de una unidad durante un año; equivale a $h$.                                                   & u.m./(u $\cdot$ año) \\
+    $c_c$, $P$   & Precio unitario de compra; equivalen a $c_a$.                                                                     & u.m./u               \\
+    $f$          & Frecuencia o número de pedidos por año; equivale a $N=D/Q^{*}$.                                                   & pedidos/año          \\
+    $i$ (en EOQ) & Tasa anual de posesión en tanto por uno: $c_p=i c_c$. Su significado es distinto del índice $i$ del análisis ABC. & año$^{-1}$           \\
+    $R$          & Umbral de pedido medido sobre la posición de inventario: $R=T_s(D/t)+SS$.                                         & u                    \\
+    \bottomrule
+\end{longtable}
+\textbf{Unidades y etiquetas:} ud o u significa unidad física; Tm significa tonelada métrica y kg, kilogramo. El símbolo $P$ como precio de compra no es la etiqueta del sistema de revisión periódica P. La expresión $\operatorname{int}(T_s/T_r)$, para estos tiempos no negativos, designa la parte entera $\lfloor T_s/T_r\rfloor$.
+
 \subsection{Convenciones matemáticas}
 \begin{itemize}
     \item El asterisco en superíndice indica un valor óptimo, como en $Q^{*}$ y $S^{*}$.
@@ -416,4 +591,3 @@ Este anexo reúne los símbolos de las fórmulas de la guía. Se utiliza \textbf
 \end{itemize}
 
 \end{document}
-
