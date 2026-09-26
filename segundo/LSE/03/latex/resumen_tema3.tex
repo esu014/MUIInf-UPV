@@ -8,6 +8,7 @@
 \usepackage{booktabs,tabularx,longtable}
 \usepackage{enumitem}
 \usepackage{microtype}
+
 \setlist{itemsep=0.4em,topsep=0.5em}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.6em}
@@ -17,6 +18,11 @@
 \date{}
 \begin{document}
 \maketitle
+
+\newpage
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
 
 \section{Fundamentos y Clasificación de Existencias}
 
@@ -596,7 +602,7 @@ Se conserva la precisión interna hasta ajustar las cantidades; no es necesario 
     \end{tabularx}
 \end{center}
 
-\textbf{Nota:} El hecho de que $Q^*$ no caiga en el rango no significa que el tramo no sirva, sino que la fórmula no puede aplicarse en su punto ideal y tenemos que forzar la cantidad al mínimo exigido por el proveedor para ``desbloquear'' el descuento.
+\textbf{Nota:} El hecho de que $Q^*$ no caiga en el rango no significa que el tramo no sirva, sino que la fórmula no puede aplicarse en su punto ideal y tenemos que forzar la cantidad al mínimo exigido por el proveedor para ``desbloquear'' el descuento, solo en caso de que sea por el rango minimo. Si es por rango máximo, se descarta, la opción no vale.
 
 \paragraph{Paso 3: Comparativa de costes totales anuales.}
 Todos los costes de la tabla se expresan en USD/año.
@@ -817,6 +823,175 @@ El coste de adquisición es el mismo en ambas alternativas y no modifica esta di
     \item Comparar con el EOQ clásico si se solicita e incluir adquisición solo cuando se disponga de su precio, o dejarla expresada simbólicamente.
 \end{enumerate}
 
+
+\clearpage
+\subsection{Tipo 5: Descuentos Incrementales por Cantidad}
+El proveedor aplica la rebaja únicamente a las unidades que sobrepasan cada umbral. Las unidades iniciales mantienen el precio de su bloque.
+
+\subsubsection{¿Cómo identificar un descuento incremental?}
+\textbf{Enunciado típico:} Se indica que las unidades que sobrepasen las primeras 500 tienen un precio y las que sobrepasen las primeras 1.000 tienen otro.
+
+\textbf{Diferencia respecto al tipo 3:}
+\begin{itemize}
+    \item \textbf{Todas las unidades:} Si se compran 600 unidades y el segundo tramo comienza en 500, las 600 reciben el precio de ese tramo.
+    \item \textbf{Incremental:} Las primeras 500 mantienen el precio del primer bloque; solo las 100 adicionales reciben el segundo precio.
+\end{itemize}
+
+\subsubsection{Razonamiento y estructura matemática}
+Para un lote situado en el tramo $k$, sean $q_{k-1}$ su umbral inferior y $V_{k-1}$ el importe de completar todos los bloques anteriores:
+\[
+    C_{\text{compra}}(Q)=V_{k-1}+c_c^{(k)}(Q-q_{k-1}).
+\]
+Reordenando:
+\[
+    A_k=V_{k-1}-c_c^{(k)}q_{k-1},
+    \qquad
+    C_{\text{compra}}(Q)=c_c^{(k)}Q+A_k.
+\]
+El término $A_k$ es un ajuste monetario por pedido. No es un coste administrativo adicional, pero al anualizar la compra aparece multiplicado por $D/Q$, igual que el coste de emisión:
+\[
+    C_a(Q)=\frac{D}{Q}C_{\text{compra}}(Q)
+    =c_c^{(k)}D+A_k\frac{D}{Q}.
+\]
+Si $c_p^{(k)}$ es constante dentro de cada tramo, el coste total anual es
+\[
+    CT_k(Q)=c_c^{(k)}D+\frac{D(c_e+A_k)}{Q}
+    +c_p^{(k)}\frac{Q}{2}.
+\]
+
+\textbf{Convención de valoración del almacenamiento:} El ejemplo proporcionado utiliza $c_p^{(k)}=i c_c^{(k)}$, es decir, la tasa de posesión aplicada al precio marginal del tramo. Se conserva esa convención para resolverlo. Si el enunciado valora el inventario al precio medio del lote, debe utilizarse en cambio
+\[
+    \bar{c}(Q)=\frac{C_{\text{compra}}(Q)}{Q},
+    \qquad
+    C_p(Q)=i\bar{c}(Q)\frac{Q}{2}
+    =\frac{i}{2}\bigl(c_c^{(k)}Q+A_k\bigr).
+\]
+En esta segunda convención aparece el término adicional $iA_k/2$ en el coste total. Dentro del tramo es constante y no cambia el punto estacionario, pero sí puede cambiar la comparación entre alternativas.
+
+\subsubsection{Disección paso a paso}
+\paragraph{Paso 1: Obtener la función de compra por tramo.}
+Para tres bloques, con umbrales $q_1$ y $q_2$:
+\begin{align*}
+    C_{\text{compra},1}(Q) & =c_c^{(1)}Q,                     \\
+    C_{\text{compra},2}(Q) & =c_c^{(1)}q_1+c_c^{(2)}(Q-q_1),  \\
+    C_{\text{compra},3}(Q) & =c_c^{(1)}q_1+c_c^{(2)}(q_2-q_1)
+    +c_c^{(3)}(Q-q_2).
+\end{align*}
+Se toma $q_0=0$ y $V_0=0$. Un pedido debe satisfacer $Q>0$.
+
+\paragraph{Paso 2: Calcular el lote económico teórico de cada tramo.}
+Derivando el coste anual dentro del tramo:
+\[
+    \frac{\mathrm{d}CT_k}{\mathrm{d}Q}
+    =-\frac{D(c_e+A_k)}{Q^2}+\frac{c_p^{(k)}}{2}.
+\]
+Al igualar a cero:
+\[
+    Q_k^{*}
+    =\sqrt{\frac{2D(c_e+A_k)}{c_p^{(k)}}}
+    =\sqrt{\frac{2D\left[c_e+V_{k-1}-c_c^{(k)}q_{k-1}\right]}
+    {c_p^{(k)}}}.
+\]
+Con descuentos decrecientes, $A_k\geq0$, por lo que actúa algebraicamente como una adición al coste fijo del pedido.
+
+\paragraph{Paso 3: Comprobar factibilidad y comparar candidatos.}
+\begin{enumerate}
+    \item Mantener los mínimos teóricos que pertenecen a sus propios tramos.
+    \item Revisar también los extremos admisibles de los tramos y, si cambia la expresión de costes, los valores a ambos lados de cada umbral. Para unidades indivisibles, comparar los enteros factibles próximos a cada mínimo y a cada frontera.
+    \item Calcular el coste anual completo de cada candidato y elegir el menor.
+\end{enumerate}
+\textbf{Precisión sobre la continuidad:} El coste de compra incremental es continuo en los umbrales. Esto, por sí solo, no permite afirmar que únicamente los mínimos interiores sean candidatos. Si se aplica $c_p^{(k)}=i c_c^{(k)}$, el coste de posesión cambia de expresión y puede saltar en la frontera. Por eso conviene comprobar los límites en lugar de descartar automáticamente toda cantidad de frontera.
+
+\subsubsection{Ejemplo práctico diseccionado: Bocadillos}
+\textbf{Datos de entrada:}
+\begin{itemize}
+    \item Demanda mensual: 1.500 lonchas/mes; demanda anual $D=18\,000$ lonchas/año.
+    \item Coste de emisión: $c_e=1$ euro/pedido.
+    \item Tasa de posesión: $i=0{,}20$ anual, interpretada sobre el precio marginal de cada tramo en este ejemplo.
+\end{itemize}
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{@{}clX@{}}
+        \toprule
+        Tramo & Tamaño de lote    & Precio incremental                                         \\
+        \midrule
+        1     & $0<Q\leq500$      & 0,25 euros por cada una de las primeras 500 lonchas.       \\
+        2     & $500<Q\leq1\,000$ & 0,20 euros por cada loncha que exceda de 500, hasta 1.000. \\
+        3     & $Q>1\,000$        & 0,15 euros por cada loncha que exceda de 1.000.            \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+
+\paragraph{Funciones de compra por pedido.}
+\begin{align*}
+    C_{\text{compra},1}(Q) & =0{,}25Q,             \\
+    C_{\text{compra},2}(Q) & =125+0{,}20(Q-500)
+    =\boxed{0{,}20Q+25},                           \\
+    C_{\text{compra},3}(Q) & =225+0{,}15(Q-1\,000)
+    =\boxed{0{,}15Q+75}.
+\end{align*}
+Por tanto, $A_1=0$, $A_2=25$ euros/pedido y $A_3=75$ euros/pedido. Los importes de los bloques completos son $V_1=125$ euros y $V_2=225$ euros.
+
+\paragraph{Lotes teóricos y factibilidad.}
+\begin{align*}
+    c_p^{(1)} & =0{,}20\cdot0{,}25=0{,}05,                 \\
+    Q_1^{*}   & =\sqrt{\frac{2\cdot18\,000\cdot1}{0{,}05}}
+    =\sqrt{720\,000}\approx848{,}53.
+\end{align*}
+Como $848{,}53>500$, el mínimo teórico no pertenece al tramo 1.
+\begin{align*}
+    c_p^{(2)} & =0{,}20\cdot0{,}20=0{,}04,                 \\
+    Q_2^{*}   & =\sqrt{\frac{2\cdot18\,000(1+25)}{0{,}04}}
+    =\sqrt{23\,400\,000}\approx4\,837{,}35.
+\end{align*}
+Como $4\,837{,}35>1\,000$, tampoco es factible en el tramo 2.
+\begin{align*}
+    c_p^{(3)} & =0{,}20\cdot0{,}15=0{,}03,                 \\
+    Q_3^{*}   & =\sqrt{\frac{2\cdot18\,000(1+75)}{0{,}03}}
+    =\sqrt{91\,200\,000}\approx9\,549{,}87.
+\end{align*}
+El tercer mínimo es factible porque supera las 1.000 unidades. Los costes unitarios de posesión anteriores se expresan en euros/(loncha $\cdot$ año).
+
+\paragraph{Comparación de costes y fronteras.}
+Las funciones anuales utilizadas son:
+\begin{align*}
+    CT_1(Q) & =4\,500+\frac{18\,000}{Q}+0{,}025Q,     \\
+    CT_2(Q) & =3\,600+\frac{468\,000}{Q}+0{,}02Q,     \\
+    CT_3(Q) & =2\,700+\frac{1\,368\,000}{Q}+0{,}015Q.
+\end{align*}
+Los dos primeros tramos son decrecientes en sus respectivos intervalos. Para cantidades enteras, se revisan sus extremos y los primeros enteros del tramo siguiente:
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}lrr@{}}
+        \toprule
+        Candidato                             & $Q$ (lonchas) & $CT$ (euros/año)        \\
+        \midrule
+        Último entero del tramo 1             & 500           & 4.548,50                \\
+        Primer entero del tramo 2             & 501           & 4.544,15                \\
+        Último entero del tramo 2             & 1.000         & 4.088,00                \\
+        Primer entero del tramo 3             & 1.001         & 4.081,65                \\
+        Entero inferior al mínimo del tramo 3 & 9.549         & 2.986,49607446          \\
+        Entero superior al mínimo del tramo 3 & 9.550         & \textbf{2.986,49607330} \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+Los dos últimos costes se muestran con más decimales para distinguir los enteros contiguos; ambos se redondean a 2.986,50 euros/año.
+
+\textbf{Conclusión:} Con la convención de almacenamiento del ejemplo, el óptimo continuo es aproximadamente 9.549,87 lonchas. Para unidades indivisibles, conviene pedir \textbf{9.550 lonchas por lote}, con coste anual aproximado de \textbf{2.986,50 euros}.
+
+\textbf{Si se valora al precio medio del lote:} Se añaden $iA_k/2$, es decir, 0, 2,50 y 7,50 euros/año a las funciones de los tramos 1, 2 y 3. En este ejemplo sigue ganando el lote de 9.550 lonchas, pero su coste anual pasa a aproximadamente 2.994,00 euros.
+
+\paragraph{Estructura de respuesta para el examen.}
+\begin{enumerate}
+    \item Confirmar que la rebaja se aplica solo a las unidades adicionales.
+    \item Convertir demanda y tasa de posesión a una misma base temporal.
+    \item Construir $C_{\text{compra}}(Q)$ acumulando los bloques previos.
+    \item Calcular $A_k$, definir la valoración del almacenamiento y obtener $CT_k(Q)$.
+    \item Hallar $Q_k^{*}$ y comprobar los intervalos y sus fronteras.
+    \item Comparar los costes anuales completos y justificar la cantidad elegida.
+\end{enumerate}
+
 \clearpage
 \appendix
 \section{Leyenda de símbolos y unidades}
@@ -950,6 +1125,25 @@ El superíndice $(k)$ identifica un tramo; no representa una potencia. La expres
     \bottomrule
 \end{longtable}
 La notación $I_{\text{máx}}$ del enunciado equivale a $I_{\max}$ en esta guía. Los símbolos $t_1$, $t_2$, $T_r$, $B$ y $\bar{I}$ se recogen en las tablas anteriores. En el modelo con escasez, $\bar{I}$ promedia el stock físico sobre todo el ciclo, incluyendo el periodo en que vale cero.
+
+
+\subsection{Notaciones adicionales de descuentos incrementales}
+\begin{longtable}{@{}p{2.8cm}p{7.2cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo                  & Significado                                                                                                          & Unidades    \\
+    \midrule
+    \endhead
+    $q_{k-1}$, $q_k$         & Umbrales inferior y superior del bloque incremental $k$; $q_0=0$.                                                    & u/pedido    \\
+    $V_{k-1}$                & Importe de completar todos los bloques anteriores; $V_0=0$. No es el consumo monetario anual $V_i$ del análisis ABC. & u.m./pedido \\
+    $A_k$                    & Ajuste monetario del tramo: $V_{k-1}-c_c^{(k)}q_{k-1}$.                                                              & u.m./pedido \\
+    $C_{\text{compra}}(Q)$   & Coste de adquirir un lote completo de tamaño $Q$.                                                                    & u.m./pedido \\
+    $C_{\text{compra},k}(Q)$ & Expresión del coste de compra aplicable en el tramo $k$.                                                             & u.m./pedido \\
+    $\bar{c}(Q)$             & Precio medio de adquisición por unidad del lote: $C_{\text{compra}}(Q)/Q$.                                           & u.m./u      \\
+    $C_a(Q)$                 & Coste anual de adquisición: $(D/Q)C_{\text{compra}}(Q)$.                                                             & u.m./año    \\
+    $CT_k(Q)$                & Coste total anual para un lote $Q$ situado en el tramo $k$.                                                          & u.m./año    \\
+    \bottomrule
+\end{longtable}
+En este tipo, $c_c^{(k)}$ es el precio marginal de las unidades adicionales del bloque, no el precio de todas las unidades del lote. La notación $\mathrm{d}CT_k/\mathrm{d}Q$ representa la derivada del coste respecto al tamaño del lote. Las variables $Q_k^{*}$, $i$, $c_e$ y $c_p^{(k)}$ mantienen los significados indicados en los anexos anteriores.
 
 \subsection{Convenciones matemáticas}
 \begin{itemize}
