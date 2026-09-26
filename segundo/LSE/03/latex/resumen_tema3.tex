@@ -1,0 +1,210 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{booktabs,tabularx}
+\usepackage{enumitem}
+\usepackage{microtype}
+\setlist{itemsep=0.4em,topsep=0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\setlength{\emergencystretch}{2em}
+\title{Guía de Estudio Teórica:\\Gestión de Inventarios y Almacenes (LSE)}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Fundamentos y Clasificación de Existencias}
+
+En el ámbito de la ingeniería de organización, el stock no debe entenderse meramente como una acumulación física de productos, sino como un regulador estratégico que permite el \textbf{desacoplamiento} entre las fases de suministro, producción y demanda. Una gestión eficiente minimiza el \textbf{capital inmovilizado} y optimiza el nivel de servicio.
+
+\subsection{Estrategias de Producción y Suministro}
+
+La configuración del sistema logístico depende de dónde se sitúe el punto de desacoplamiento (\emph{decoupling point}):
+
+\begin{itemize}
+    \item \textbf{Make to Stock (MTS):} Producción orientada al inventario. La empresa fabrica productos terminados de forma independiente a los pedidos en firme. Se aplica a productos de alto volumen y nula personalización, asumiendo un riesgo de inventario para garantizar disponibilidad inmediata.
+    \item \textbf{Assemble to Order (ATO):} El producto final se configura a partir de componentes estándar previamente almacenados. El proceso de personalización (ensamblaje) solo se inicia tras recibir el pedido, permitiendo un equilibrio entre agilidad y variedad.
+    \item \textbf{Fabricación bajo pedido (Make to Order - MTO):} La producción comienza exclusivamente tras la confirmación del cliente. Esta estrategia elimina el riesgo de obsolescencia de producto terminado, desplazando el punto de desacoplamiento al inicio del proceso. Es característica de la maquinaria especial o bienes de alta complejidad.
+
+\end{itemize}
+\subsection{Clasificación Funcional del Stock}
+
+\begin{itemize}
+    \item \textbf{Stock por anticipación:} Reservas acumuladas ante incrementos previstos de la demanda, promociones comerciales o paradas técnicas programadas.
+    \item \textbf{Stock por tamaño de lote:} Surge al procesar cantidades superiores a la demanda inmediata para amortizar los costes fijos de emisión o configuración de maquinaria.
+    \item \textbf{Stock en tránsito:} Existencias en movimiento dentro de la red logística, necesarias para salvar la distancia física entre eslabones.
+    \item \textbf{Stock de seguridad ($SS$):} Nivel de inventario destinado a proteger el sistema frente a la variabilidad de la demanda o retrasos inesperados en el tiempo de suministro.
+
+\end{itemize}
+\subsection{Clasificación según Proceso de Fabricación}
+
+\begin{enumerate}
+    \item \textbf{Materias primas:} Recursos que no han sufrido transformación en la planta.
+    \item \textbf{Productos en curso (WIP):} Componentes en fases intermedias de transformación o espera.
+    \item \textbf{Productos acabados:} Bienes finales destinados a la comercialización.
+    \item \textbf{Piezas de repuesto:} Elementos críticos para el mantenimiento que garantizan la disponibilidad de los activos productivos.
+    \item \textbf{Suministros industriales:} Materiales necesarios para el proceso (disolventes, lubricantes, energía) que no se integran físicamente en el producto final.
+    \item \textbf{Ítems de fabricación ajena:} Componentes cuya adquisición externa resulta más eficiente que la producción propia.
+
+\end{enumerate}
+\subsection{Naturaleza de la Demanda}
+
+\begin{itemize}
+    \item \textbf{Demanda independiente:} Sujeta a fluctuaciones externas del mercado (productos terminados).
+    \item \textbf{Demanda dependiente:} Se deriva directamente de planes de producción internos (componentes y materias primas).
+
+\end{itemize}
+\section{Análisis y Procedimiento ABC (Pareto)}
+
+La clasificación ABC es una técnica de gestión selectiva basada en el principio de Pareto, que permite enfocar los recursos de control en los artículos con mayor impacto económico.
+
+\subsection{Metodología de Clasificación}
+
+\begin{enumerate}
+    \item \textbf{Identificación:} Registro de la demanda anual ($D$) y el coste unitario ($c_a$) de cada referencia.
+    \item \textbf{Valoración del Consumo:} Cálculo del valor monetario anual para cada ítem ($V_i = c_a \cdot D$).
+    \item \textbf{Jerarquización:} Ordenación de los artículos de mayor a menor valor de consumo.
+    \item \textbf{Acumulación:} Cálculo del porcentaje individual sobre el valor total y del porcentaje acumulado de la inversión.
+
+\end{enumerate}
+\subsection{Categorización de Artículos}
+
+Siguiendo los estándares de la asignatura LSE (basados en el análisis de referencias tipo LogiParts), se establecen los siguientes umbrales:
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabularx}{\textwidth}{@{}l p{3.4cm} X@{}}
+        \toprule
+        Clase      & \% de Inversión Acumulada & Descripción                                                                 \\
+        \midrule
+        \textbf{A} & Hasta $\approx 81{,}3\%$  & Artículos críticos. Representan la mayor inversión en capital inmovilizado. \\
+        \textbf{B} & Hasta $\approx 95{,}7\%$  & Artículos de importancia intermedia.                                        \\
+        \textbf{C} & Hasta $100\%$             & Artículos de escaso valor económico pero muy numerosos.                     \\
+        \bottomrule
+    \end{tabularx}
+\end{center}
+
+\subsection{Políticas de Control según Clase}
+
+\begin{itemize}
+    \item \textbf{Clase A:} Seguimiento continuo y riguroso. Se busca minimizar el stock de seguridad y maximizar la rotación para reducir el \textbf{Coste de Oportunidad} del capital.
+    \item \textbf{Clase B:} Control intermedio con revisiones periódicas programadas.
+    \item \textbf{Clase C:} Control simplificado (ej. sistema de dos cajones). El coste administrativo de un control exhaustivo no compensa el valor del inventario.
+
+\end{itemize}
+\section{Estructura de Costes de Inventario}
+
+El objetivo fundamental es la minimización del Coste Total Anual ($CT$), equilibrando los costes de posesión frente a los de gestión.
+
+\subsection{Definición de Parámetros de Coste}
+
+Es imperativo diferenciar entre costes unitarios y sus magnitudes anuales totales:
+
+\begin{itemize}
+    \item \textbf{Coste de Adquisición ($C_a$):} Valor total de compra.
+          \begin{itemize}
+              \item $C_a = c_a \cdot D$, donde $c_a$ es el precio unitario.
+          \end{itemize}
+    \item \textbf{Coste de Emisión o Pedido ($C_e$):} Coste anual de lanzar órdenes al proveedor.
+          \begin{itemize}
+              \item $C_e = K \cdot \frac{D}{Q}$, donde $K$ es el coste fijo por cada pedido individual.
+          \end{itemize}
+    \item \textbf{Coste de Posesión o Mantenimiento ($C_p$):} Coste anual derivado de mantener stock en almacén.
+          \begin{itemize}
+              \item $C_p = h \cdot \bar{I}$, donde $h$ es el coste de mantenimiento por unidad y año, e $\bar{I}$ es el inventario medio. El valor de $h$ es independiente del proveedor y refleja el coste de oportunidad.
+          \end{itemize}
+    \item \textbf{Coste de Ruptura o Faltante ($C_r$ o $B$):} Penalización económica por no satisfacer la demanda.
+          \begin{itemize}
+              \item $B$ se define como el coste de faltante por unidad y año.
+
+          \end{itemize}
+\end{itemize}
+\subsection{Ecuación del Coste Total ($CT$)}
+
+Para un modelo determinista básico, la función de coste a minimizar es:
+
+\[
+    CT = c_a \cdot D + K \cdot \frac{D}{Q} + h \cdot \frac{Q}{2}
+\]
+
+\section{Parámetros Operacionales y Sistemas de Control}
+
+\subsection{Variables Técnicas}
+
+\begin{itemize}
+    \item \textbf{Tiempo de Suministro ($T_s$):} Plazo entre la emisión del pedido y su disponibilidad en almacén.
+    \item \textbf{Tiempo de Reaprovisionamiento o Ciclo ($T_r$):} Tiempo entre dos recepciones consecutivas ($T_r = \frac{Q}{D/t}$).
+    \item \textbf{Lote de Pedido ($Q$):} Cantidad de unidades solicitadas en cada orden.
+
+\end{itemize}
+\textbf{Nota de Cátedra sobre la Base Temporal ($t$):} En la resolución de ejercicios LSE, es crítico verificar el número de días operativos. Si se indica "($\text{Año} = 365\ \text{días}$)", la demanda diaria es $\frac{D}{365}$. En entornos industriales con fines de semana no laborables, se suele aplicar $t = 250$ días.
+
+\subsection{El Punto de Pedido ($P_p$)}
+
+El $P_p$ determina el nivel de inventario que activa el proceso de compra. Según el \textbf{Formulario LSE}, se debe aplicar la fórmula de precisión para cualquier relación entre el tiempo de suministro y el tiempo de ciclo:
+
+\[
+    P_p = (T_s - E \cdot T_r) \cdot \frac{D}{t} + SS
+\]
+
+Donde $E$ representa el número de ciclos completos que transcurren durante el tiempo de espera (la parte entera de $\frac{T_s}{T_r}$).
+
+\begin{itemize}
+    \item Si $T_s < T_r$, entonces $E = 0$, reduciéndose la fórmula a: $P_p = T_s \cdot \frac{D}{t} + SS$.
+
+\end{itemize}
+\subsection{Sistemas de Revisión}
+
+\begin{itemize}
+    \item \textbf{Revisión Continua (Sistema $Q$):} Se monitoriza el nivel de stock en tiempo real. Se pide una cantidad fija $Q$ cuando se alcanza el $P_p$.
+    \item \textbf{Revisión Periódica (Sistema P):} Se revisa el stock cada intervalo de tiempo fijo y se pide la cantidad necesaria para alcanzar un nivel objetivo.
+
+\end{itemize}
+\section{Modelos Deterministas de Gestión de Stocks (EOQ)}
+
+\subsection{Modelo EOQ Clásico (Lote Económico de Wilson)}
+
+Basado en demanda constante, entrega inmediata y ausencia de escasez.
+
+\begin{itemize}
+    \item \textbf{Lote Óptimo ($Q^{*}$):} $Q^{*} = \sqrt{\frac{2 \cdot D \cdot K}{h}}$
+    \item \textbf{Número de pedidos/año:} $N = \frac{D}{Q^{*}}$
+    \item \textbf{Tiempo entre pedidos ($T_r$):} $T_r = \frac{Q^{*}}{D}$ (años) o $T_r = \frac{t}{N}$ (días).
+
+\end{itemize}
+\subsection{EOQ con Escasez Planificada (Backorders)}
+
+Se permite diferir la entrega de pedidos si el coste de mantenimiento es significativamente superior al coste de faltante ($B$).
+
+\begin{itemize}
+    \item \textbf{Lote Óptimo ($Q^{*}$):} $Q^{*} = \sqrt{\frac{2 \cdot D \cdot K}{h} \cdot \left( \frac{h+B}{B} \right)}$
+    \item \textbf{Máximo nivel de escasez ($S^{*}$):} $S^{*} = Q^{*} \cdot \left( \frac{h}{h+B} \right)$
+    \item \textbf{Stock Máximo ($I_{\max}$):} $I_{\max} = Q^{*} - S^{*}$
+    \item \textbf{Tiempos del ciclo:}
+          \begin{itemize}
+              \item $t_1 = \frac{Q^{*} - S^{*}}{D}$ (Tiempo con existencias).
+              \item $t_2 = \frac{S^{*}}{D}$ (Tiempo en situación de escasez).
+
+          \end{itemize}
+\end{itemize}
+\subsection{EOQ con Descuentos por Cantidad}
+
+Procedimiento para determinar si el ahorro en el coste de adquisición compensa el incremento en el coste de mantenimiento:
+
+\begin{enumerate}
+    \item \textbf{Cálculo de $Q^{*}$:} Calcular el lote óptimo de Wilson para cada tramo de precio utilizando el $h$ correspondiente (si este depende del precio).
+    \item \textbf{Validación de Factibilidad:}
+          \begin{itemize}
+              \item Si el $Q^{*}$ calculado está dentro del rango del tramo, es \textbf{factible}.
+              \item Si el $Q^{*}$ es inferior al límite mínimo del tramo, el candidato factible para ese precio es el \textbf{límite inferior} (punto de quiebre o \emph{price break}).
+              \item Si el $Q^{*}$ es superior al límite máximo, ese tramo se descarta (ya que el $Q^{*}$ del tramo siguiente, con menor precio, será más favorable).
+          \end{itemize}
+    \item \textbf{Comparación de Costes Totales:} Calcular el $CT$ para todos los $Q$ factibles identificados, incluyendo obligatoriamente el coste de adquisición ($c_a \cdot D$). Se selecciona la opción con el menor $CT$ anual.
+
+\end{enumerate}
+\end{document}
