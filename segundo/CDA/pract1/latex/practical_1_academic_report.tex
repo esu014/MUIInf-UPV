@@ -1,0 +1,344 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Academic, restrained styling for listings
+\definecolor{codebg}{gray}{0.96}
+\definecolor{codeframe}{gray}{0.75}
+\definecolor{codegreen}{rgb}{0.1, 0.45, 0.1}
+\definecolor{codeblue}{rgb}{0.0, 0.15, 0.55}
+\definecolor{codegray}{rgb}{0.35, 0.35, 0.35}
+
+\lstset{
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  commentstyle=\color{codegreen}\itshape,
+  frame=lines,
+  rulecolor=\color{codeframe},
+  keywordstyle=\color{codeblue}\bfseries,
+  stringstyle=\color{codegray},
+  numbers=none,
+  tabsize=2,
+  showstringspaces=false,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=codeblue,
+  citecolor=black
+}
+
+\begin{document}
+
+\begin{center}
+  {\scshape\large Universitat Politècnica de València}\\[0.2em]
+  {\scshape\normalsize Escola Tècnica Superior d'Enginyeria Informàtica (ETSINF)}\\[1.2em]
+  {\Large\bfseries Practical 1: Introduction to R}\\[0.4em]
+  {\large Data Science}\\[1.2em]
+  \begin{tabular}{rl}
+    \textbf{Author(s):} & Enrique Sopeña Urbano \\
+    \textbf{Subject:}   & Practical Work 1      \\
+    \textbf{Date:}      & \today
+  \end{tabular}
+\end{center}
+
+\vspace{0.8em}
+\hrule
+\vspace{1.2em}
+
+\begin{abstract}
+  \noindent This laboratory report documents the exercises completed for Practical~1 of the Data Science course. The objective is to establish familiarity with the R scientific programming environment, covering primitive vector manipulation, cyclic repetitions, matrix construction, pseudorandom generation under controlled seed states, data frame ingestion, frequency cross-tabulations, conditional partitioning, and graphical bivariate inspection.
+\end{abstract}
+
+\vspace{1em}
+
+\section{Vector Sequence Generation}
+\textbf{Objective:} Generate the sequence of natural numbers $\{1, 2, \dots, 12\}$ and store the resulting array in the vector object $X$.
+
+\subsection{Implementation and Output}
+\begin{lstlisting}[language=R]
+# Generate the sequence 1 through 12 using the colon operator
+X <- 1:12
+X
+\end{lstlisting}
+
+\begin{lstlisting}
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12
+\end{lstlisting}
+
+\subsection{Discussion}
+In the R language, the binary colon operator (\texttt{:}) acts as a compact generator for regular arithmetic sequences with unit stride. The assignment operator \texttt{<-} allocates the resulting 12-element integer vector to symbol $X$.
+
+\section{Cyclic Sequence Repetitions}
+\textbf{Objective:} Construct four contiguous repetitions of the numeric sequence $\mathbf{s} = (6, 2, 4)$.
+
+\subsection{Implementation and Output}
+\begin{lstlisting}[language=R]
+# Repeat the entire tuple (6, 2, 4) four times
+rep(c(6, 2, 4), times = 4)
+\end{lstlisting}
+
+\begin{lstlisting}
+ [1] 6 2 4 6 2 4 6 2 4 6 2 4
+\end{lstlisting}
+
+\subsection{Discussion}
+The primitive function \texttt{rep()} replicates input vector components. By setting \texttt{times = 4}, the complete ordered sequence of length 3 is repeated cyclically, producing an atomic numeric vector of length 12 ($3 \times 4$).
+
+\section{Matrix Construction from Sequences}
+\textbf{Objective:} Generate a sequence comprising six 9s, five 2s, and four 5s, populating a $5 \times 3$ matrix column-wise.
+
+\subsection{Implementation and Output}
+\begin{lstlisting}[language=R]
+# Construct concatenated repetition vector
+vec3 <- c(rep(9, 6), rep(2, 5), rep(5, 4))
+
+# Organize elements into a 5x3 matrix populated column-wise
+M <- matrix(vec3, nrow = 5, ncol = 3, byrow = FALSE)
+M
+\end{lstlisting}
+
+\begin{lstlisting}
+     [,1] [,2] [,3]
+[1,]    9    9    2
+[2,]    9    2    5
+[3,]    9    2    5
+[4,]    9    2    5
+[5,]    9    2    5
+\end{lstlisting}
+
+\subsection{Discussion}
+The scalar repetitions form an ordered sequence of cardinality $6 + 5 + 4 = 15$. The \texttt{matrix()} constructor dimensions the array into 5 rows and 3 columns. Because R follows Fortran-style column-major ordering by default (\texttt{byrow = FALSE}), the five rows of column 1 are populated first, followed by columns 2 and 3.
+
+\newpage
+
+\section{Pseudorandom Normal Generation and Reproducibility}
+\textbf{Objective:} Generate $N = 20$ independent realizations from a standard normal distribution $\mathcal{N}(0, 1)$ using seed 100, assess central tendency and dispersion metrics, and evaluate seed state invariance.
+
+\subsection{Implementation and Output}
+\begin{lstlisting}[language=R]
+# Initialize RNG with seed 100 and sample 20 normal values
+set.seed(100)
+v1 <- rnorm(20)
+v1
+
+# Compute descriptive statistics
+m_val   <- mean(v1)
+med_val <- median(v1)
+var_val <- var(v1)
+sd_val  <- sd(v1)
+
+c(Mean = m_val, Median = med_val, Variance = var_val, StdDev = sd_val)
+\end{lstlisting}
+
+\begin{lstlisting}
+> v1
+ [1] -0.50219235  0.13153117 -0.07891709  0.88678481  0.11697127  0.31863009
+ [7] -0.58179068  0.71453271 -0.82525943 -0.35986213  0.08988646  0.09627446
+[13] -0.20163395  0.73984050  0.12337954 -0.02931771 -1.19253457 -0.19819770
+[19] -0.08865646  0.64069818
+
+> c(Mean = m_val, Median = med_val, Variance = var_val, StdDev = sd_val)
+       Mean      Median    Variance      StdDev 
+ 0.01499573  0.03028437  0.28004138  0.52918936 
+\end{lstlisting}
+
+\subsection{Seed State Comparison}
+\begin{lstlisting}[language=R]
+# Identical seed evaluation
+set.seed(100)
+v2 <- rnorm(20)
+identical(v1, v2)
+
+# Alternative seed evaluation
+set.seed(200)
+v3 <- rnorm(20)
+c(Mean = mean(v3), StdDev = sd(v3))
+\end{lstlisting}
+
+\begin{lstlisting}
+> identical(v1, v2)
+[1] TRUE
+
+> c(Mean = mean(v3), StdDev = sd(v3))
+     Mean    StdDev 
+0.0396767 0.9984920 
+\end{lstlisting}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Sample Statistics ($N=20$) versus Theoretical Population $\mathcal{N}(0, 1)$}
+  \label{tab:seed_stats}
+  \vspace{0.4em}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Statistic} & \textbf{($\text{seed}=100$)} & \textbf{($\text{seed}=200$)} & \textbf{Population Value} \\
+    \midrule
+    Mean ($\bar{x}$)   & $0.0150$                     & $0.0397$                     & $0.0000$                  \\
+    Median             & $0.0303$                     & $-0.0485$                    & $0.0000$                  \\
+    Variance ($s^2$)   & $0.2800$                     & $0.9970$                     & $1.0000$                  \\
+    Std. Dev. ($s$)    & $0.5292$                     & $0.9985$                     & $1.0000$                  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Discussion}
+Pseudorandom number algorithms (such as the default Mersenne Twister in R) generate deterministic sequences conditioned on an internal state register. Specifying \texttt{set.seed(100)} resets the register to a fixed position, yielding strictly identical realization vectors (\texttt{identical(v1, v2) == TRUE}). Modifying the seed to $200$ produces an uncorrelated sequence from the distribution, demonstrating that empirical sample statistics diverge according to finite-sample variation.
+
+\newpage
+
+\section{Data Frame Analysis on Student Observations}
+The dataset \texttt{data1.txt} compiles anthropometric measurements and categorical attributes across student subjects.
+
+\subsection{(a--d) Data Ingestion, Header Assignment, and Verification}
+\begin{lstlisting}[language=R]
+# (a) Read space-delimited text without header
+students <- read.table("data1.txt", header = FALSE)
+
+# (b) Assign explicit column titles
+colnames(students) <- c("height", "shoesize", "gender", "population")
+
+# (c) Validate structure and inspect leading observations
+str(students)
+head(students, n = 3)
+
+# (d) Query column titles exclusively
+colnames(students)
+\end{lstlisting}
+
+\begin{lstlisting}
+> colnames(students)
+[1] "height"     "shoesize"   "gender"     "population"
+\end{lstlisting}
+
+\subsection{(e) Attribute Extraction}
+\begin{lstlisting}[language=R]
+# Extract single attribute vector
+students$height
+\end{lstlisting}
+
+\subsection{(f--g) Categorical Distributions and Contingency Analysis}
+\begin{lstlisting}[language=R]
+# (f) One-way marginal distributions
+table(students$gender)
+table(students$population)
+
+# (g) Two-way cross-tabulation table
+table(students$gender, students$population)
+\end{lstlisting}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Cross-Classification Contingency Matrix (Gender $\times$ Population)}
+  \label{tab:contingency}
+  \vspace{0.4em}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Gender} & \textbf{Site 1} & \textbf{Site 2} & \textbf{Site 3} & \textbf{Total} \\
+    \midrule
+    Female          & $n_{f,1}$       & $n_{f,2}$       & $n_{f,3}$       & $N_f$          \\
+    Male            & $n_{m,1}$       & $n_{m,2}$       & $n_{m,3}$       & $N_m$          \\
+    \midrule
+    \textbf{Total}  & $N_{\cdot,1}$   & $N_{\cdot,2}$   & $N_{\cdot,3}$   & $N$            \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{(h) Stratification by Gender}
+\begin{lstlisting}[language=R]
+# Bracket indexing notation
+males_df   <- students[students$gender == "male", ]
+females_df <- students[students$gender == "female", ]
+
+# Declarative subset function
+males_sub   <- subset(students, gender == "male")
+females_sub <- subset(students, gender == "female")
+\end{lstlisting}
+
+\subsection{(i) Stratification Relative to Median Height}
+\begin{lstlisting}[language=R]
+# Compute sample median threshold
+med_h <- median(students$height)
+
+# Partition using indexing and subsetting
+below_df  <- students[students$height < med_h, ]
+above_df  <- students[students$height > med_h, ]
+
+below_sub <- subset(students, height < med_h)
+above_sub <- subset(students, height > med_h)
+\end{lstlisting}
+\textit{Remark:} Strict ordering conditions ensure that boundary observations ($x_i = \text{median}$) are excluded from both strict partitions.
+
+\newpage
+
+\subsection{(j) Scale Transformations: Centimetres to Metres}
+Three distinct programming paradigms were implemented to apply the metric scale transformation $h_{\text{m}} = h_{\text{cm}} / 100$:
+
+\begin{lstlisting}[language=R]
+# Paradigm 1: Vectorized primitive division (idiomatic)
+st_m1 <- students
+st_m1$height <- st_m1$height / 100
+
+# Paradigm 2: Explicit procedural loop
+st_m2 <- students
+for (i in 1:nrow(st_m2)) {
+  st_m2$height[i] <- st_m2$height[i] / 100
+}
+
+# Paradigm 3: Functional programming via apply()
+st_m3 <- students
+st_m3$height <- apply(st_m3["height"], 1, function(x) x / 100)
+\end{lstlisting}
+
+\begin{itemize}
+  \item \textbf{Vectorized Arithmetic:} Leverages compiled low-level routines without interpreter overhead, representing the optimal design pattern in R.
+  \item \textbf{Procedural Iteration:} Requires repeated row-level indexing in interpreted memory, incurring higher computational complexity $\mathcal{O}(n)$.
+  \item \textbf{Functional Application:} Encapsulates transformation per row margin through \texttt{apply()}, guaranteeing consistency across array dimensions.
+\end{itemize}
+
+\subsection{(k) Bivariate Scatter Visualization}
+\begin{lstlisting}[language=R]
+# Encode visual aesthetics conditionally
+point_colors <- ifelse(students$gender == "male", "blue", "magenta")
+point_shapes <- ifelse(students$gender == "male", 1, 3)
+
+# Render scatter plot
+plot(students$shoesize, students$height,
+     col = point_colors,
+     pch = point_shapes,
+     xlab = "Shoe Size",
+     ylab = "Height (cm)",
+     main = "Height vs Shoe Size by Gender")
+
+# Attach explanatory legend
+legend("topleft",
+       legend = c("Male", "Female"),
+       col = c("blue", "magenta"),
+       pch = c(1, 3))
+\end{lstlisting}
+
+\vspace{1.5em}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=1\textwidth]{grafico.png}
+  \caption{Scatter plot of student shoe size against measured height, stratified by gender.}
+  \label{fig:scatter}
+\end{figure}
+
+\end{document}
