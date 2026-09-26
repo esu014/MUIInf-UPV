@@ -5,7 +5,7 @@
 \usepackage{lmodern}
 \usepackage{amsmath,amssymb}
 \usepackage[margin=2.5cm]{geometry}
-\usepackage{booktabs,tabularx}
+\usepackage{booktabs,tabularx,longtable}
 \usepackage{enumitem}
 \usepackage{microtype}
 \setlist{itemsep=0.4em,topsep=0.5em}
@@ -207,4 +207,213 @@ Procedimiento para determinar si el ahorro en el coste de adquisición compensa 
     \item \textbf{Comparación de Costes Totales:} Calcular el $CT$ para todos los $Q$ factibles identificados, incluyendo obligatoriamente el coste de adquisición ($c_a \cdot D$). Se selecciona la opción con el menor $CT$ anual.
 
 \end{enumerate}
+
+\clearpage
+\section{Estructuras de los ejercicios}
+\subsection{Tipo 1: Clasificación ABC de Inventarios}
+\subsubsection{¿Cómo identificar un ejercicio de Clasificación ABC?}
+\textbf{Enunciado típico:} Se proporciona un listado de materiales o referencias (M1, M2, PT001, etc.) junto con sus demandas o consumos anuales en unidades y sus precios o costes unitarios.
+
+\textbf{Lo que te piden:} Completar la tabla calculando el valor de consumo, los porcentajes individuales y acumulados, y etiquetar cada artículo dentro de la clase A, B o C.
+
+\subsubsection{Razonamiento y disección paso a paso}
+El objetivo es aplicar la regla del 80/20 (análisis de Pareto): no todas las referencias del almacén tienen el mismo peso económico. Debemos identificar el pequeño grupo de artículos que representa la mayor parte del dinero movido para aplicarles un control estricto. La regla es orientativa; no exige porcentajes exactamente iguales a 80 y 20.
+
+\paragraph{Paso 1: Calcular el consumo anual monetario de cada ítem.}
+\[
+    \underbrace{V_i}_{\text{Consumo anual monetario}}
+    =
+    \underbrace{D_i}_{\text{Demanda anual}}
+    \cdot
+    \underbrace{c_{a,i}}_{\text{Precio unitario}}
+\]
+Si la demanda se expresa en unidades/año y el precio en euros/unidad o USD/unidad, el resultado se expresa en euros/año o USD/año.
+
+\textbf{¿Por qué se hace así?} No podemos comparar peras con manzanas (unidades físicas de tornillos con unidades de motores). Para clasificar objetivamente la importancia de un stock, debemos traducir la utilización de cada artículo a su valor monetario total anual.
+
+\paragraph{Paso 2: Ordenar en orden decreciente y calcular el valor acumulado.}
+\textbf{Acción:} Reordenar las filas situando arriba el artículo con mayor valor monetario anual y abajo el de menor valor. A partir de aquí, el índice $i$ indica la posición en esta lista ordenada.
+\[
+    V_1 \geq V_2 \geq \cdots \geq V_n,
+    \qquad
+    VA_i = V_i + VA_{i-1},
+    \qquad VA_0 = 0.
+\]
+\textbf{¿Por qué se hace así?} Pareto busca acumular la riqueza o el gasto desde lo más importante a lo menos importante. Ordenar de mayor a menor permite sumar el impacto acumulado a medida que bajamos en la lista.
+
+\paragraph{Paso 3: Calcular los porcentajes individuales y acumulados.}
+\textbf{Suma total del almacén:} Se suman los consumos anuales monetarios de todos los artículos.
+\[
+    V_{\text{total}} = \sum_{i=1}^{n} V_i
+\]
+\textbf{Porcentaje individual de cada artículo:}
+\[
+    p_i = \frac{V_i}{V_{\text{total}}}\cdot 100
+\]
+\textbf{Porcentaje acumulado:}
+\[
+    p_{\text{acum},i} = \frac{VA_i}{V_{\text{total}}}\cdot 100
+\]
+Los resultados de $p_i$ y $p_{\text{acum},i}$ se expresan en porcentaje.
+
+\textbf{¿Por qué se hace así?} Necesitamos porcentajes normalizados (de 0\% a 100\%) para aplicar las reglas de corte sin importar si el almacén mueve 10.000 euros o 10.000.000 euros al año.
+
+\paragraph{Paso 4: Asignar las categorías A, B y C.}
+Como orientación, se utilizan los siguientes intervalos:
+\begin{itemize}
+    \item \textbf{Clase A:} Artículos que acumulan aproximadamente el 70--80\% del valor monetario total. Suelen representar un pequeño porcentaje de referencias (10--20\%).
+    \item \textbf{Clase B:} Artículos que aportan el siguiente 15--20\% del valor, llegando habitualmente a un acumulado en torno al 90--95\%. Suelen representar un porcentaje intermedio de referencias (20--30\%).
+    \item \textbf{Clase C:} Artículos finales que aportan el 5--10\% restante del valor hasta alcanzar el 100\%. Suelen representar la mayoría de los productos (50--60\% de las referencias).
+\end{itemize}
+\textbf{Criterio de corte:} Se debe seguir el criterio indicado en el enunciado o en la resolución de referencia. Los intervalos anteriores son orientativos y los artículos no se fraccionan. En LogiParts, los cortes resultantes son aproximadamente 81,3\% y 95,7\%; no son umbrales universales para todos los ejercicios.
+
+\subsubsection{Ejemplo práctico diseccionado: LogiParts}
+El material proporcionado presenta este caso como el Ejercicio 3 del examen de control. Con sus datos, se obtiene la siguiente tabla, ordenada de mayor a menor consumo monetario.
+
+\begin{center}
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}lrrrrrc@{}}
+        \toprule
+        Material       & Demanda & Precio  & Consumo anual    & \% del total    & \% acum.        & Clase \\
+                       & (u/año) & (USD/u) & (USD/año)        &                 &                 &       \\
+        \midrule
+        M3             & 400     & 200,00  & 80.000           & 38,28           & 38,28           & A     \\
+        M1             & 600     & 100,00  & 60.000           & 28,71           & 66,99           & A     \\
+        M5             & 150     & 200,00  & 30.000           & 14,35           & 81,34           & A     \\
+        M2             & 1.200   & 15,00   & 18.000           & 8,61            & 89,95           & B     \\
+        M7             & 100     & 120,00  & 12.000           & 5,74            & 95,69           & B     \\
+        M4             & 3.000   & 2,00    & 6.000            & 2,87            & 98,56           & C     \\
+        M8             & 2.000   & 1,00    & 2.000            & 0,96            & 99,52           & C     \\
+        M6             & 200     & 5,00    & 1.000            & 0,48            & 100,00          & C     \\
+        \midrule
+        \textbf{TOTAL} &         &         & \textbf{209.000} & \textbf{100,00} & \textbf{100,00} &       \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\textbf{Redondeo:} Los porcentajes se han recalculado a partir de los importes originales y se muestran con dos decimales. Los acumulados se calculan sobre los importes exactos, sin sumar porcentajes previamente redondeados.
+
+\paragraph{Comprobación de una fila: M5.}
+\[
+    V_{\mathrm{M5}} = 150 \cdot 200 = 30\,000\ \text{USD/año}
+\]
+\[
+    VA_3 = 80\,000 + 60\,000 + 30\,000 = 170\,000\ \text{USD/año}
+\]
+\[
+    p_{\mathrm{M5}} = \frac{30\,000}{209\,000}\cdot100 \approx 14{,}35\%,
+    \qquad
+    p_{\text{acum},3} = \frac{170\,000}{209\,000}\cdot100 \approx 81{,}34\%.
+\]
+
+\paragraph{Análisis de las decisiones de clasificación.}
+\begin{itemize}
+    \item \textbf{Suma total:} $V_{\text{total}} = 209\,000\ \text{USD/año}$.
+    \item \textbf{Corte de la clase A:} M3, M1 y M5 suman 170.000 USD/año, el 81,34\% del valor total. Se clasifican como A en la solución proporcionada al quedar el acumulado en torno al 80\%. Son 3 referencias de 8 (37,5\% de las referencias).
+    \item \textbf{Corte de la clase B:} M2 y M7 aportan 30.000 USD/año, el 14,35\% del total. Llevan el acumulado del 81,34\% al 95,69\% y se clasifican como B en la solución proporcionada.
+    \item \textbf{Corte de la clase C:} M4, M8 y M6 aportan 9.000 USD/año, el 4,31\% restante. Sus porcentajes individuales son 2,87\%, 0,96\% y 0,48\%; completan el 100\% y se clasifican como C.
+\end{itemize}
+
+\paragraph{Estructura de respuesta para el examen.}
+\begin{enumerate}
+    \item Calcular $V_i = D_i c_{a,i}$ para cada referencia.
+    \item Ordenar los artículos por $V_i$ de mayor a menor.
+    \item Calcular $V_{\text{total}}$ y los valores acumulados $VA_i$.
+    \item Calcular $p_i$ y $p_{\text{acum},i}$ sin redondeos intermedios.
+    \item Asignar las clases y justificar los cortes utilizados.
+    \item Comprobar que el último acumulado es 100\% y que las tres clases contienen todas las referencias.
+\end{enumerate}
+
+\clearpage
+\appendix
+\section{Leyenda de símbolos y unidades}
+Este anexo reúne los símbolos de las fórmulas de la guía. Se utiliza \textbf{u} para unidades físicas y \textbf{u.m.} para unidades monetarias (por ejemplo, euros o USD). En cada ejercicio deben mantenerse la misma moneda y una base temporal coherente.
+
+\subsection{Demanda, lotes e inventario}
+\begin{longtable}{@{}p{2cm}p{8cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo    & Significado                                                                            & Unidades    \\
+    \midrule
+    \endhead
+    $D$        & Demanda anual de un artículo.                                                          & u/año       \\
+    $Q$        & Cantidad solicitada en cada pedido o tamaño del lote.                                  & u/pedido    \\
+    $Q^{*}$    & Tamaño óptimo del lote que minimiza el coste del modelo.                               & u/pedido    \\
+    $N$        & Número de pedidos realizados al año: $N=D/Q^{*}$.                                      & pedidos/año \\
+    $\bar{I}$  & Inventario medio mantenido en almacén.                                                 & u           \\
+    $I_{\max}$ & Nivel máximo de existencias. En el modelo con escasez: $I_{\max}=Q^{*}-S^{*}$.         & u           \\
+    $SS$       & Stock de seguridad.                                                                    & u           \\
+    $S^{*}$    & Máximo nivel de escasez en la solución óptima del modelo con pedidos pendientes.       & u           \\
+    $P_p$      & Punto de pedido: nivel que activa la reposición según la fórmula utilizada en la guía. & u           \\
+    \bottomrule
+\end{longtable}
+
+\subsection{Costes}
+\begin{longtable}{@{}p{2cm}p{8cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo & Significado                                                             & Unidades             \\
+    \midrule
+    \endhead
+    $c_a$   & Coste o precio de adquisición de una unidad.                            & u.m./u               \\
+    $C_a$   & Coste total anual de adquisición: $C_a=c_a D$.                          & u.m./año             \\
+    $K$     & Coste fijo de emitir un pedido.                                         & u.m./pedido          \\
+    $C_e$   & Coste anual de emisión de pedidos: $C_e=KD/Q$.                          & u.m./año             \\
+    $h$     & Coste de mantener una unidad durante un año.                            & u.m./(u $\cdot$ año) \\
+    $C_p$   & Coste anual de posesión: $C_p=h\bar{I}$.                                & u.m./año             \\
+    $B$     & Coste de faltante por unidad y año en el modelo de escasez planificada. & u.m./(u $\cdot$ año) \\
+    $C_r$   & Coste total anual de ruptura o faltantes.                               & u.m./año             \\
+    $CT$    & Coste total anual del modelo considerado.                               & u.m./año             \\
+    \bottomrule
+\end{longtable}
+\textbf{Distinciones importantes:} $c_a$ es un precio unitario; $C_a$ es un coste anual total. Del mismo modo, $B$ es un parámetro unitario de penalización y $C_r$ es un coste anual total: no son intercambiables. La letra B usada como nombre de una clase ABC no representa un coste.
+
+\subsection{Tiempos y base temporal}
+\begin{longtable}{@{}p{2cm}p{8cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo & Significado                                                                                  & Unidades                  \\
+    \midrule
+    \endhead
+    $t$     & Número de días operativos considerados en un año; por ejemplo, 250 o 365 según el enunciado. & días/año                  \\
+    $D/t$   & Demanda diaria derivada de la demanda anual.                                                 & u/día                     \\
+    $T_s$   & Tiempo de suministro: desde la emisión del pedido hasta su disponibilidad.                   & días o años               \\
+    $T_r$   & Tiempo de ciclo entre reposiciones. $Q/D$ lo expresa en años y $Q/(D/t)$ en días.            & días o años               \\
+    $E$     & Número entero de ciclos completos durante el suministro: $E=\lfloor T_s/T_r\rfloor$.         & Sin unidades              \\
+    $t_1$   & Duración de la parte del ciclo con existencias: $(Q^{*}-S^{*})/D$.                           & años si $D$ está en u/año \\
+    $t_2$   & Duración de la parte del ciclo con escasez: $S^{*}/D$.                                       & años si $D$ está en u/año \\
+    \bottomrule
+\end{longtable}
+\textbf{Coherencia temporal:} $T_s$ y $T_r$ deben expresarse en la misma unidad al calcular $E$. En la fórmula del punto de pedido que utiliza $D/t$, ambos tiempos deben estar en días. Para convertir $t_1$ y $t_2$ de años a días operativos, se multiplican por $t$.
+
+\subsection{Clasificación ABC}
+\begin{longtable}{@{}p{2cm}p{8cm}p{3.5cm}@{}}
+    \toprule
+    Símbolo             & Significado                                                                & Unidades     \\
+    \midrule
+    \endhead
+    $i$                 & Índice del artículo; tras ordenar, indica su posición en la lista.         & Sin unidades \\
+    $n$                 & Número total de referencias analizadas.                                    & referencias  \\
+    $D_i$               & Demanda anual de la referencia situada en la posición $i$.                 & u/año        \\
+    $c_{a,i}$           & Precio unitario de esa referencia.                                         & u.m./u       \\
+    $V_i$               & Consumo anual monetario: $V_i=D_i c_{a,i}$.                                & u.m./año     \\
+    $VA_i$              & Valor monetario acumulado hasta la posición $i$: $VA_i=\sum_{j=1}^{i}V_j$. & u.m./año     \\
+    $VA_0$              & Valor acumulado antes del primer artículo; se fija en cero.                & u.m./año     \\
+    $V_{\text{total}}$  & Suma de los consumos anuales monetarios de todas las referencias.          & u.m./año     \\
+    $p_i$               & Porcentaje individual del valor total correspondiente al artículo $i$.     & \%           \\
+    $p_{\text{acum},i}$ & Porcentaje acumulado hasta el artículo situado en la posición $i$.         & \%           \\
+    $j$                 & Índice auxiliar para recorrer los artículos dentro de una suma.            & Sin unidades \\
+    \bottomrule
+\end{longtable}
+
+\subsection{Convenciones matemáticas}
+\begin{itemize}
+    \item El asterisco en superíndice indica un valor óptimo, como en $Q^{*}$ y $S^{*}$.
+    \item La barra de $\bar{I}$ indica un valor medio; el subíndice $\max$ indica un máximo.
+    \item Los subíndices identifican el concepto o la referencia: $a$ (adquisición), $e$ (emisión), $p$ en $C_p$ (posesión), $r$ en $C_r$ (ruptura), $s$ en $T_s$ (suministro) y $r$ en $T_r$ (reaprovisionamiento).
+    \item $\sum$ significa sumar los términos indicados; $\sqrt{\phantom{x}}$ representa la raíz cuadrada y $\cdot$ la multiplicación.
+    \item $\lfloor x\rfloor$ es el mayor entero menor o igual que $x$; $\approx$ significa aproximadamente igual; $<$ significa menor que y $\geq$ mayor o igual que.
+    \item Los nombres de las clases A, B y C y de los sistemas de revisión Q y P son etiquetas de clasificación o de política.
+\end{itemize}
+
 \end{document}
+
