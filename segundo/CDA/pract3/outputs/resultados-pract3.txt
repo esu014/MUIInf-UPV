@@ -1,0 +1,59 @@
+'data.frame':	394 obs. of  16 variables:
+ $ K1       : num  38.1 39.4 43.3 45.7 44.6 44.2 44.2 53.1 45.1 40.7 ...
+ $ K2       : num  48.6 53.6 50.4 50.1 50.4 44.8 45.8 53.8 52.5 44.5 ...
+ $ ch       : num  6.9 5.7 8.8 11.1 11.1 8.9 11.1 7.5 7.7 9.4 ...
+ $ na       : int  2 2 2 1 2 1 1 1 2 1 ...
+ $ Incision : int  60 140 120 30 60 180 130 60 60 30 ...
+ $ Prof     : int  390 400 381 370 440 327 380 400 380 477 ...
+ $ diam     : int  5 5 5 5 5 6 6 5 6 5 ...
+ $ grosor   : int  300 300 200 250 200 200 200 200 225 200 ...
+ $ Longitud1: int  90 105 120 160 120 150 210 160 120 160 ...
+ $ Longitud2: int  180 210 240 160 240 150 210 160 240 160 ...
+ $ grosor1  : int  300 300 200 250 200 200 200 200 200 200 ...
+ $ grosor2  : int  300 300 200 0 200 0 0 0 250 0 ...
+ $ long1    : int  90 90 120 160 120 150 210 160 90 160 ...
+ $ long2    : int  90 120 120 0 120 0 0 0 150 0 ...
+ $ K1.salida: num  35.5 42 42.7 45.8 44.4 42.8 43.1 48.7 45.7 39.8 ...
+ $ Astig    : num  10.1 8.9 3 1.9 2.9 2.3 3.9 2.8 3.2 3.8 ...
+    K1   K2   ch na Incision Prof diam grosor Longitud1 Longitud2 grosor1
+1 38.1 48.6  6.9  2       60  390    5    300        90       180     300
+2 39.4 53.6  5.7  2      140  400    5    300       105       210     300
+3 43.3 50.4  8.8  2      120  381    5    200       120       240     200
+4 45.7 50.1 11.1  1       30  370    5    250       160       160     250
+5 44.6 50.4 11.1  2       60  440    5    200       120       240     200
+6 44.2 44.8  8.9  1      180  327    6    200       150       150     200
+  grosor2 long1 long2 K1.salida Astig
+1     300    90    90      35.5  10.1
+2     300    90   120      42.0   8.9
+3     200   120   120      42.7   3.0
+4       0   160     0      45.8   1.9
+5     200   120   120      44.4   2.9
+6       0   150     0      42.8   2.3
+Warning message:
+`qplot()` was deprecated in ggplot2 3.4.0. 
+`geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+`geom_smooth()` using method = 'loess' and formula = 'y ~ x'
+pdf 
+  2 
+Warning message:
+In geom_point(method = "lm") : Ignoring unknown parameters: `method`
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+pdf 
+  2 
+Warning message:
+In geom_point(method = "lm") : Ignoring unknown parameters: `method`
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+pdf 
+  2 
+pdf 
+  2 
+pdf 
+  2 
+pdf 
+  2 
+pdf 
+  2 
+pdf 
+  2 
