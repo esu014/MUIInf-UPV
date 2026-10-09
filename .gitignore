@@ -26,3 +26,6 @@
 *.RData
 *.Rhistory
 .Rproj.user/
+
+# Carpetas
+/segundo/LSE/lab-SAP/imagenes/
