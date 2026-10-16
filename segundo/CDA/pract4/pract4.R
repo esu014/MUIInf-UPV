@@ -76,11 +76,21 @@ model_full <- rpart(
 
 pdf("outputs/decision_trees.pdf", width = 10, height = 7)
 
-plot(model_train, main = "Decision tree: training set")
-text(model_train, use.n = TRUE, all = TRUE, cex = 0.8)
+plot(
+  model_train,
+  main = "Decision tree: training set",
+  uniform = TRUE,
+  margin = 0.1
+)
+text(model_train, use.n = TRUE, all = FALSE, cex = 0.8)
 
-plot(model_full, main = "Decision tree: full dataset")
-text(model_full, use.n = TRUE, all = TRUE, cex = 0.8)
+plot(
+  model_full,
+  main = "Decision tree: full dataset",
+  uniform = TRUE,
+  margin = 0.1
+)
+text(model_full, use.n = TRUE, all = FALSE, cex = 0.8)
 
 invisible(dev.off())
 
@@ -106,6 +116,8 @@ comparison <- rbind(
 
 cat("\n--- Tree comparison ---\n")
 print(comparison)
+
+
 
 ###################################################################
 # Exercise 4: Predict probabilities and class labels
