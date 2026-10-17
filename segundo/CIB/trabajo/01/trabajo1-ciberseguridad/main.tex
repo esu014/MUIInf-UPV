@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{csquotes}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.7cm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.15}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{xcolor}
+\definecolor{academicblue}{HTML}{23445E}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Actualidad en ciberseguridad}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{referencias.bib}
+\usepackage[unicode,hidelinks]{hyperref}
+\hypersetup{pdftitle={Trabajo 1: Actualidad en ciberseguridad}}
+\usepackage{bookmark}
+\setcounter{tocdepth}{1}
+\newcommand{\pendiente}[1]{\par\smallskip\noindent{\color{academicblue}\textbf{[PENDIENTE]} #1}\par\smallskip}
+% Sustituir los campos antes de entregar.
+\newcommand{\autor}{Enrique Sopeña Urbano}
+\newcommand{\titulacion}{Máster Universitario en Ingeniería Informática}
+\newcommand{\universidad}{Universitat Politècnica de València}
+\newcommand{\curso}{2026-2027}
+\newcommand{\fechaentrega}{30 de noviembre de 2026}
+\begin{document}
+\begin{titlepage}
+    \centering
+    {\large\universidad\par}
+    \vspace{0.4cm}
+    {\large\titulacion\par}
+    \vfill
+    {\color{academicblue}\Huge\bfseries Actualidad en\\[0.2cm] ciberseguridad\par}
+    \vspace{0.7cm}
+    {\Large Trabajo 1\par}
+    \vspace{0.5cm}
+    {\large Análisis técnico y crítico de cinco incidentes\par}
+    \vfill
+    \begin{tabular}{rl}
+        Autoría:    & \autor         \\
+        Asignatura: & Ciberseguridad \\
+        Curso:      & \curso         \\
+        Entrega:    & \fechaentrega
+    \end{tabular}
+    \vspace{1.4cm}
+\end{titlepage}
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\include{chapters/01-introduccion}
+\include{chapters/02-metodologia}
+\include{chapters/03-incidente-1}
+\include{chapters/04-incidente-2}
+\include{chapters/05-incidente-3}
+\include{chapters/06-incidente-4}
+\include{chapters/07-incidente-5}
+\include{chapters/08-comparativa}
+\include{chapters/09-conclusiones}
+\clearpage
+% Mostrar un marcador si aún no existen referencias citadas.
+\defbibheading{bibliography}[Bibliografía]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+\chapter*{Bibliografía}\addcontentsline{toc}{chapter}{Bibliografía}
+\printbibliography[heading=none]
+\pendiente{Incorporar referencias verificadas a referencias.bib y citarlas en el texto.}
+\appendix
+\include{chapters/10-anexos}
+\end{document}

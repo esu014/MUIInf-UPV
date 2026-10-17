@@ -15,12 +15,15 @@
 *.out
 *.toc
 *.bbl
+*.bcf
 *.blg
 *.lof
 *.lot
 *.nav
 *.snm
 *.vrb
+*.pdf
+*.run.xml
 
 # R
 *.RData
