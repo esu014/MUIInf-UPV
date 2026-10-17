@@ -1,0 +1,84 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage{csquotes}
+\usepackage[a4paper,margin=2.7cm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.15}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{xcolor}
+\definecolor{academicblue}{HTML}{23445E}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Cifrado de la información}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{referencias.bib}
+\usepackage[unicode,hidelinks]{hyperref}
+\hypersetup{pdftitle={Trabajo 2: Cifrado de la información}}
+\usepackage{bookmark}
+\setcounter{tocdepth}{1}
+\newcommand{\pendiente}[1]{\par\smallskip\noindent{\color{academicblue}\textbf{[PENDIENTE]} #1}\par\smallskip}
+
+\newcommand{\autor}{Enrique Sopeña Urbano}
+\newcommand{\titulacion}{Máster Universitario en Ingeniería Informática}
+\newcommand{\universidad}{Universitat Politècnica de València}
+\newcommand{\curso}{2026-2027}
+\newcommand{\fechaentrega}{30 de noviembre de 2026}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\large\universidad\par}
+    \vspace{0.4cm}
+    {\large\titulacion\par}
+    \vfill
+    {\color{academicblue}\Huge\bfseries Cifrado de la\\[0.2cm] información\par}
+    \vspace{0.7cm}
+    {\Large Trabajo 2\par}
+    \vspace{0.5cm}
+    {\large Ficheros, comunicación con PGP y almacenamiento con LUKS\par}
+    \vfill
+    \begin{tabular}{rl}
+        Autoría:    & \autor         \\
+        Asignatura: & Ciberseguridad \\
+        Curso:      & \curso         \\
+        Entrega:    & \fechaentrega
+    \end{tabular}
+    \vspace{1.4cm}
+\end{titlepage}
+
+\pagenumbering{roman}
+
+\tableofcontents
+
+\clearpage
+
+\pagenumbering{arabic}
+
+\include{chapters/01-introduccion}
+\include{chapters/02-fundamentos}
+\include{chapters/03-metodologia}
+\include{chapters/04-ficheros}
+\include{chapters/05-pgp}
+\include{chapters/06-luks}
+\include{chapters/07-discusion}
+\include{chapters/08-conclusiones}
+\include{chapters/09-entrega}
+\clearpage
+
+\chapter*{Bibliografía}
+\addcontentsline{toc}{chapter}{Bibliografía}
+\printbibliography[heading=none]
+\pendiente{Añadir únicamente referencias consultadas y verificadas a referencias.bib, citarlas en el texto y retirar este aviso al completar la memoria.}
+
+\appendix
+\include{chapters/10-anexos}
+\end{document}

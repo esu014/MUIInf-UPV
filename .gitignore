@@ -33,3 +33,13 @@
 # Carpetas
 /segundo/LSE/lab-SAP/imagenes/
 /segundo/CDA/teoria/diapositivas/
+
+# Material privado: conservar fuera del repositorio
+privado/
+*.key
+*.gpg
+*.pgp
+*.asc
+*.p12
+*.pfx
+*.kdbx
