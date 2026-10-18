@@ -51,4 +51,4 @@ privado/
 !segundo/CDA/teoria/tests-propios/**/*.pdf
 
 # Excepciones: MDs específicos que sí se deben rastrear
-!segundo/CDA/teoria/tests-propios/**/plantilla.md
+!segundo/CDA/teoria/tests-propios/**/README.md
