@@ -43,3 +43,6 @@ privado/
 *.p12
 *.pfx
 *.kdbx
+
+# Excepciones: PDFs específicos que sí se deben rastrear
+!segundo/CDA/teoria/tests-propios/**/*.pdf
