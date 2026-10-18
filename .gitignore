@@ -34,6 +34,9 @@
 /segundo/LSE/lab-SAP/imagenes/
 /segundo/CDA/teoria/diapositivas/
 
+# MDs específicos que NO se deben rastrear
+segundo/CDA/teoria/tests-propios/**/*.md
+
 # Material privado: conservar fuera del repositorio
 privado/
 *.key
@@ -46,3 +49,6 @@ privado/
 
 # Excepciones: PDFs específicos que sí se deben rastrear
 !segundo/CDA/teoria/tests-propios/**/*.pdf
+
+# Excepciones: MDs específicos que sí se deben rastrear
+!segundo/CDA/teoria/tests-propios/**/plantilla.md
