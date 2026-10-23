@@ -49,6 +49,10 @@ privado/
 
 # Excepciones: PDFs específicos que sí se deben rastrear
 !segundo/CDA/teoria/tests-propios/**/*.pdf
+!segundo/CDA/**/outputs/**/*.pdf
 
 # Excepciones: MDs específicos que sí se deben rastrear
 !segundo/CDA/teoria/tests-propios/**/README.md
+
+# Excepciones: logs específicos que sí se deben rastrear
+!segundo/CDA/pract*/**/salida.log
