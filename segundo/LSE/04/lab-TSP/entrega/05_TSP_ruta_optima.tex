@@ -1,0 +1,112 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern,amsmath,amssymb,booktabs,array}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\newcommand{\eur}{\,\text{euros}}
+\begin{document}
+\begin{center}{\Large\bfseries Ejercicio 1. Problema del viajante}\par
+QUIROTEC · Logística y Servicios\end{center}
+\section*{Ruta óptima y distancia}
+Se busca un circuito que visite exactamente una vez cada una de las veinte ciudades
+y regrese a su ciudad de partida. Se utilizan exclusivamente las distancias de la matriz
+del enunciado, expresadas en kilómetros. Se fija A Coruña como origen para presentar la ruta.
+
+La solución óptima tiene una distancia total de \textbf{3.946 km}, incluido el regreso
+desde León hasta A Coruña. El recorrido se detalla a continuación.
+
+\begin{center}\small
+\begin{tabular}{rllrr}\toprule
+Tramo & Origen & Destino & km & Acumulado \\\midrule
+1 & A Coruña & Vigo & 141 & 141 \\
+2 & Vigo & Ourense & 87 & 228 \\
+3 & Ourense & Salamanca & 305 & 533 \\
+4 & Salamanca & Badajoz & 295 & 828 \\
+5 & Badajoz & Sevilla & 207 & 1.035 \\
+6 & Sevilla & Málaga & 191 & 1.226 \\
+7 & Málaga & Córdoba & 155 & 1.381 \\
+8 & Córdoba & Madrid & 358 & 1.739 \\
+9 & Madrid & Albacete & 240 & 1.979 \\
+10 & Albacete & Alicante & 163 & 2.142 \\
+11 & Alicante & Valencia & 158 & 2.300 \\
+12 & Valencia & Castellón & 67 & 2.367 \\
+13 & Castellón & Barcelona & 269 & 2.636 \\
+14 & Barcelona & Lleida & 155 & 2.791 \\
+15 & Lleida & Zaragoza & 142 & 2.933 \\
+16 & Zaragoza & Pamplona & 171 & 3.104 \\
+17 & Pamplona & Santander & 229 & 3.333 \\
+18 & Santander & Burgos & 147 & 3.480 \\
+19 & Burgos & León & 180 & 3.660 \\
+20 & León & A Coruña & 286 & 3.946 \\
+\midrule
+\multicolumn{3}{r}{\textbf{Distancia total}} & \textbf{3.946} & \\
+\bottomrule\end{tabular}\end{center}
+
+La ruta contiene las veinte ciudades sin repeticiones y tiene veinte desplazamientos.
+Como la matriz es simétrica, recorrer este mismo circuito en sentido inverso da la misma
+distancia. Cambiar el punto de partida del circuito tampoco altera su longitud.
+
+El archivo \texttt{03\_TSP\_optimo.xlsx} contiene los identificadores de la ruta.
+Las ciudades, los destinos, la distancia de cada tramo y la suma total se obtienen con
+fórmulas, mediante búsquedas en la matriz original.
+
+\newpage
+\section*{Resolución con NEOS y verificación}
+Se ha seguido el procedimiento de la guía, utilizando directamente el archivo
+\texttt{TSP\_datos\_ES.mps} proporcionado para la práctica. El modelo se resolvió mediante
+Gurobi en el servidor NEOS. Contiene 380 variables binarias para seleccionar los arcos,
+20 variables auxiliares continuas y 401 restricciones. Exige una entrada y una salida
+por ciudad e incorpora restricciones de orden para impedir circuitos parciales.
+
+Se envió el MPS original junto con los parámetros \texttt{MIPGap=0} y
+\texttt{MIPGapAbs=0}, solicitando la devolución de los archivos de solución.
+El trabajo 24012137 se resolvió el 23 de octubre de 2026. Su salida registra:
+
+\begin{center}\begin{tabular}{lr}\toprule
+Dato de la ejecución & Resultado \\\midrule
+Motor & Gurobi 13.0.1 \\
+Estado & \texttt{Optimal solution found} \\
+Mejor objetivo & 3.946 km \\
+Mejor cota & 3.946 km \\
+Brecha de optimalidad & 0,0000\,\% \\
+Tiempo del optimizador & 0,43 segundos \\
+\bottomrule\end{tabular}\end{center}
+
+La igualdad entre el objetivo y la cota, con brecha nula, certifica la optimalidad global.
+El ZIP devuelto contiene diez soluciones; \texttt{model0.sol} es la óptima, con objetivo
+3.946. Las otras nueve son soluciones intermedias de mayor coste.
+
+Para reconstruir la ruta se toman los arcos con $x_{ij}=1$. Por ejemplo,
+$x_{1,19}=1$ indica A Coruña--Vigo, y $x_{19,13}=1$, Vigo--Ourense.
+Siguiendo los veinte arcos se obtiene el circuito de la primera página, que se trasladó
+al Excel. Se comprobó que visita las veinte ciudades, vuelve al origen y suma 3.946 km.
+Las distancias de los tramos y su suma se calculan mediante fórmulas en el libro.
+
+\section*{Comparación con las heurísticas}
+El vecino más próximo comienza en A Coruña y escoge en cada paso la ciudad no visitada
+más cercana. En caso de empate se toma el menor identificador de la matriz. Finalmente
+se vuelve al origen. El libro \texttt{01\_TSP\_vecino.xlsx} calcula esta selección con fórmulas.
+
+\begin{center}\begin{tabular}{lrr}\toprule
+Procedimiento & Distancia (km) & Exceso sobre el óptimo \\\midrule
+Orden alfabético & 12.388 & 8.442 \\
+Vecino más próximo & 4.348 & 402 \\
+Evolutionary: ejecución en Excel & 3.998 & 52 \\
+Gurobi en NEOS & 3.946 & 0 \\\bottomrule
+\end{tabular}\end{center}
+El óptimo reduce el recorrido del vecino más próximo en 402 km, un 9,25\,\%.
+
+La ejecución de Evolutionary realizada en Excel Online obtuvo 3.998 km. Solver indicó
+que había convergido a la solución actual y que se satisfacían todas las restricciones.
+Los controles de repeticiones y de identificadores fuera de rango dieron cero.
+Esta solución mejora en 350 km al vecino más próximo y supera el óptimo en 52 km.
+La convergencia del método evolutivo no constituye una prueba de optimalidad global.
+
+\small Fuentes: matriz de distancias de la práctica, p. 1; salida de NEOS del trabajo
+24012137 y archivo \texttt{model0.sol}; modelo original \texttt{TSP\_datos\_ES.mps};
+ejecución de Evolutionary en Excel Online.
+\end{document}

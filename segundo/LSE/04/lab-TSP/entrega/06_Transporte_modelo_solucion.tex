@@ -1,0 +1,160 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern,amsmath,amssymb,booktabs,array}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\newcommand{\eur}{\,\text{euros}}
+\begin{document}
+\begin{center}{\Large\bfseries Ejercicio 2. ForUkra}\par
+Modelo de localización y transporte\end{center}
+\section*{Datos y criterio económico}
+ForUkra debe decidir qué silos adquirir y cómo abastecer diariamente a siete granjas.
+El horizonte de planificación es de 1.461 días. Las demandas son
+$(36,42,34,50,27,30,43)$ quintales/día, con una demanda total de 262 quintales/día.
+
+Se denota por $a_i$ la capacidad del silo $i$, por $F_i$ su coste fijo para todo el
+horizonte y por $b_j$ la demanda de la granja $j$. El coste fijo equivalente diario
+es $f_i=F_i/1461$. No se introduce descuento financiero, al no indicarlo el enunciado.
+
+\begin{center}\begin{tabular}{lrrr}\toprule
+Silo & Capacidad (q/día) & $F_i$ (euros) & $f_i$ (euros/día) \\\midrule
+S1 & 80 & 321.420 & 220,00 \\
+S2 & 90 & 350.640 & 240,00 \\
+S3 & 110 & 379.860 & 260,00 \\
+S4 & 120 & 401.775 & 275,00 \\
+S5 & 100 & 350.640 & 240,00 \\
+S6 & 120 & 336.030 & 230,00 \\
+\bottomrule\end{tabular}\end{center}
+Las distancias $d_{ij}$, en kilómetros, son:
+\begin{center}\begin{tabular}{lrrrrrrr}\toprule
+ & G1 & G2 & G3 & G4 & G5 & G6 & G7 \\\midrule
+S1 & 18 & 23 & 19 & 21 & 24 & 17 & 9 \\
+S2 & 21 & 18 & 17 & 23 & 11 & 18 & 20 \\
+S3 & 27 & 18 & 17 & 20 & 23 & 9 & 18 \\
+S4 & 16 & 23 & 9 & 31 & 21 & 23 & 10 \\
+S5 & 31 & 20 & 18 & 19 & 10 & 17 & 18 \\
+S6 & 18 & 17 & 29 & 21 & 22 & 18 & 8 \\
+\bottomrule\end{tabular}\end{center}
+El coste indicado es de 0,06 euros por quintal y kilómetro y se consideran ida y vuelta.
+Por tanto, el coeficiente de transporte es $c_{ij}=2\cdot0{,}06\cdot d_{ij}=0{,}12d_{ij}$
+euros por quintal. El factor dos se aplica a toda la distancia del trayecto, conforme
+al criterio del enunciado.
+
+\section*{Variables de decisión}
+Para $i=1,\ldots,6$ y $j=1,\ldots,7$:
+\begin{itemize}
+\item $y_i\in\{0,1\}$: vale 1 si se adquiere y utiliza el silo $i$, y 0 en caso contrario.
+\item $x_{ij}\geq0$: quintales enviados diariamente desde el silo $i$ hasta la granja $j$.
+\end{itemize}
+Son seis variables binarias y 42 continuas. Se permite que una granja reciba de varios
+silos. No se impone una asignación exclusiva porque el enunciado no la exige.
+
+\newpage
+\section*{Función objetivo y restricciones}
+Se minimiza el coste total diario, compuesto por el coste fijo equivalente de los silos
+seleccionados y el coste de transporte:
+\begin{align*}
+\min\quad z={}&\sum_{i=1}^{6}\frac{F_i}{1461}y_i+
+\sum_{i=1}^{6}\sum_{j=1}^{7}0{,}12d_{ij}x_{ij}.\\[4pt]
+\text{sujeto a}\quad
+&\sum_{i=1}^{6}x_{ij}=b_j &&j=1,\ldots,7,\\
+&\sum_{j=1}^{7}x_{ij}\leq a_i y_i &&i=1,\ldots,6,\\
+&x_{ij}\geq0 &&i=1,\ldots,6,\quad j=1,\ldots,7,\\
+&y_i\in\{0,1\} &&i=1,\ldots,6.
+\end{align*}
+Las siete igualdades de demanda aseguran el abastecimiento exacto. Las seis desigualdades
+de capacidad limitan los envíos y los hacen nulos si el silo no se abre. No es necesario
+añadir otra constante de tipo gran $M$: la propia capacidad $a_i$ realiza esa función.
+Multiplicar la función objetivo por 1.461 da el coste total del horizonte y conserva
+las mismas decisiones óptimas si se repite diariamente el mismo suministro.
+
+\section*{Solución óptima e interpretación}
+La solución abre \textbf{S1, S5 y S6}, es decir,
+$(y_1,\ldots,y_6)=(1,0,0,0,1,1)$. Un plan óptimo diario es:
+
+\begin{center}\small\begin{tabular}{lrrrrrrrr}\toprule
+ & G1 & G2 & G3 & G4 & G5 & G6 & G7 & Total \\\midrule
+S1 & 36 & 0 & 11 & 0 & 0 & 30 & 0 & 77 \\
+S2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+S3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+S4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+S5 & 0 & 0 & 23 & 50 & 27 & 0 & 0 & 100 \\
+S6 & 0 & 42 & 0 & 0 & 0 & 0 & 43 & 85 \\
+\midrule
+Demanda & 36 & 42 & 34 & 50 & 27 & 30 & 43 & 262 \\
+\bottomrule\end{tabular}\end{center}
+
+S1 abastece a G1, G6 y parte de G3, con 77 quintales/día. S5 suministra a G4, G5 y los
+23 quintales/día restantes de G3, utilizando toda su capacidad de 100. S6 atiende a G2
+y G7, con 85 quintales/día. Los silos S2, S3 y S4 no se adquieren.
+
+\begin{center}\begin{tabular}{lrrr}\toprule
+Silo abierto & Capacidad & Enviado & Capacidad libre \\\midrule
+S1 & 80 & 77 & 3 \\
+S5 & 100 & 100 & 0 \\
+S6 & 120 & 85 & 35 \\\midrule
+Total & 300 & 262 & 38 \\\bottomrule
+\end{tabular}\end{center}
+
+La capacidad conjunta de 300 quintales/día supera la demanda en 38. La reserva no se
+reparte libremente entre granjas sin alterar el transporte: los costes de cada enlace
+determinan el plan elegido. La utilización agregada es $262/300$, equivalente al 87,33\,\%.
+
+\newpage
+\section*{Desglose de costes}
+Los costes diarios de los silos abiertos son:
+\begin{center}\begin{tabular}{lrrr}\toprule
+Silo & Fijo (euros/día) & Transporte (euros/día) & Total (euros/día) \\\midrule
+S1 & 220,00 & 164,04 & 384,04 \\
+S5 & 240,00 & 196,08 & 436,08 \\
+S6 & 230,00 & 126,96 & 356,96 \\
+\midrule
+Total & 690,00 & 487,08 & \textbf{1.177,08} \\\bottomrule
+\end{tabular}\end{center}
+Por ejemplo, el transporte de S1 cuesta
+\[
+0{,}12(18\cdot36+19\cdot11+17\cdot30)=164{,}04\eur/\text{día}.
+\]
+El coste fijo conjunto del horizonte es
+$321420+350640+336030=1.008.090$ euros. El coste de transporte durante los 1.461 días es
+$487{,}08\cdot1461=711.623{,}88$ euros. Por tanto, el coste total para los cuatro años es
+\textbf{1.719.713,88 euros}.
+
+\section*{Resolución con Solver en Excel Online}
+Se ha resuelto el modelo en Excel Online con el complemento Solver de Frontline Systems,
+seleccionando el motor \emph{LP/Quadratic}, adecuado para la estructura lineal del problema,
+y manteniendo las variables de apertura como binarias. La configuración utilizada es:
+
+\begin{center}\small\begin{tabular}{ll}\toprule
+Elemento & Configuración \\\midrule
+Hoja & \texttt{Modelo} \\
+Celda objetivo & \texttt{C18}, minimizar \\
+Celdas variables & \texttt{B4:I9} \\
+Apertura de silos & \texttt{I4:I9} binarias \\
+Envíos no negativos & \texttt{B4:H9 >= 0} \\
+Capacidad de los silos & \texttt{J4:J9 <= K4:K9} \\
+Demanda de las granjas & \texttt{B11:H11 = B12:H12} \\
+Motor & \emph{LP/Quadratic} \\
+\bottomrule\end{tabular}\end{center}
+
+Al finalizar, Solver mostró el mensaje \emph{Solver found a solution. All constraints and
+optimality conditions are satisfied.} La solución mantiene abiertos S1, S5 y S6 y alcanza
+un coste de 1.177,08 euros/día, con el plan de envíos detallado en la página anterior.
+
+Se comprobó que las siete diferencias entre suministro y demanda, en \texttt{B13:H13},
+son cero. Las holguras de capacidad de S1, S5 y S6 son, respectivamente, 3, 0 y 35
+quintales/día; los silos cerrados no realizan envíos. Las aperturas son binarias y todos
+los envíos son no negativos. Los flujos obtenidos son enteros aunque el modelo permite
+cantidades continuas.
+
+En el libro, las decisiones son los envíos y las aperturas. Los costes, las sumas, las
+holguras y las comprobaciones de demanda se calculan mediante fórmulas a partir de
+los datos del enunciado.
+
+\small Fuentes: \emph{Ejercicio 2 Tema 4 Práctica}, p. 1, y ejecución del modelo en Excel
+Online con Solver, motor \emph{LP/Quadratic}.
+\end{document}

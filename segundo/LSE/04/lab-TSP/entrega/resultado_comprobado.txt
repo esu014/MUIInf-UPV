@@ -1,0 +1,5 @@
+Trabajo NEOS 24012137. Modelo original TSP_datos_ES.mps.
+Gurobi 13.0.1. 401 restricciones, 400 variables (380 binarias y 20 continuas).
+Objetivo 3946 km; cota 3946; gap 0 %. Tiempo del optimizador: 0,43 s.
+Ruta (ID): 1 -> 19 -> 13 -> 15 -> 4 -> 17 -> 12 -> 8 -> 11 -> 2 -> 3 -> 18 -> 7 -> 5 -> 10 -> 20 -> 14 -> 16 -> 6 -> 9 -> 1
+El óptimo está en model0.sol. Los otros nueve archivos son soluciones intermedias.
