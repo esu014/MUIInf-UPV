@@ -38,7 +38,6 @@ price_plot <- xyplot(
   ylab = "House price",
   main = "House price versus numerical features"
 )
-price_plot
 
 dir.create("outputs", showWarnings = FALSE)
 pdf("outputs/price_relationships.pdf")
@@ -192,6 +191,40 @@ print(cp_table[selected_row, , drop = FALSE])
 cat("\n--- Pruned tree ---\n")
 print(model_pruned)
 
+###################################################################
+# Export model figures for the report
+###################################################################
+
+pdf("outputs/model_figures.pdf", width = 11, height = 7)
+
+par(mar = c(2, 2, 3, 2))
+
+plot(
+  model_tree,
+  uniform = TRUE,
+  margin = 0.12,
+  main = "Original regression tree"
+)
+text(model_tree, use.n = TRUE, all = FALSE, cex = 0.65)
+
+par(mar = c(5, 5, 4, 2) + 0.1)
+
+plotcp(
+  model_tree,
+  main = "Cross-validation and tree complexity"
+)
+
+par(mar = c(2, 2, 3, 2))
+
+plot(
+  model_pruned,
+  uniform = TRUE,
+  margin = 0.12,
+  main = "Pruned regression tree"
+)
+text(model_pruned, use.n = TRUE, all = FALSE, cex = 0.85)
+
+invisible(dev.off())
 
 ###################################################################
 # Exercise 7: Evaluate regression models
