@@ -1,0 +1,241 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,array}
+\usepackage{tikz}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\newcommand{\ruta}[1]{\ensuremath{#1}}
+
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries Práctica VRP}\\[4pt]
+  Logística y Servicios\\[2pt]
+  Modelo capacitado y heurística de Clarke y Wright
+\end{center}
+
+\section{Datos y modelo matemático}
+
+La instancia contiene un depósito, situado en el nodo 0, y cinco clientes.
+Los datos proceden de la hoja \texttt{VRP 5} del fichero
+\texttt{Tema 4 VRP\_datos.xlsx}. La capacidad del vehículo es $Q=25$.
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+Nodo & Coordenada $X$ & Coordenada $Y$ & Demanda $d_i$\\
+\midrule
+0 & 20 & 4 & 0\\
+1 & $-7$ & 9 & 8\\
+2 & $-3$ & 10 & 6\\
+3 & $-17$ & $-9$ & 8\\
+4 & 8 & $-16$ & 7\\
+5 & 7 & $-20$ & 3\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El coste del arco $(i,j)$ es la distancia euclídea
+\[
+ c_{ij}=\sqrt{(X_i-X_j)^2+(Y_i-Y_j)^2}.
+\]
+No se redondean las distancias durante los cálculos. Los costes se expresan
+en unidades de distancia, puesto que no se especifican una escala geográfica
+ni una tarifa de transporte. La demanda total es $32$, por lo que se necesitan
+al menos $\lceil32/25\rceil=2$ viajes. Un mismo vehículo puede realizarlos
+sucesivamente y recargar al regresar al depósito.
+
+Sean $N=\{0,1,2,3,4,5\}$ y $V=N\setminus\{0\}$. La variable binaria
+$x_{ij}$ vale 1 si se recorre el arco $(i,j)$. Para cada cliente, $u_i$
+es una variable auxiliar de carga acumulada que permite imponer la capacidad
+y eliminar subciclos; sus restricciones pueden admitir holgura.
+
+\begin{align}
+ \min\quad & z=\sum_{i\in N}\sum_{\substack{j\in N\\j\ne i}}c_{ij}x_{ij}
+ \label{eq:obj}\\
+ \text{s.a.}\quad
+ & \sum_{\substack{j\in N\\j\ne i}}x_{ij}=1 && \forall i\in V,\\
+ & \sum_{\substack{i\in N\\i\ne j}}x_{ij}=1 && \forall j\in V,\\
+ & \sum_{j\in V}x_{0j}=\sum_{i\in V}x_{i0},\\
+ & u_i-u_j+Qx_{ij}\le Q-d_j && \forall i,j\in V,\ i\ne j,\label{eq:mtz}\\
+ & d_i\le u_i\le Q && \forall i\in V,\\
+ & x_{ij}\in\{0,1\} && \forall i,j\in N,\ i\ne j.
+\end{align}
+
+Las restricciones de entrada y salida garantizan una visita por cliente.
+El balance del depósito iguala las salidas y los regresos, sin fijar el número
+de viajes. Si $x_{ij}=1$, la restricción~\eqref{eq:mtz} implica
+$u_j\ge u_i+d_j$. Por tanto, las restricciones MTZ impiden subciclos entre
+clientes y, junto con las cotas de $u_i$, limitan la carga de cada ruta.
+En la matriz de decisión del Excel también se impone $x_{ii}=0$.
+
+\newpage
+\section{Solución óptima}
+
+El modelo se ha resuelto con el complemento Solver de Microsoft Excel
+Online. Solver ha indicado que se satisfacen todas las restricciones y las
+condiciones de optimalidad. La matriz de decisión obtenida determina los
+siguientes viajes:
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Ruta & Carga & Coste\\
+\midrule
+\ruta{0-3-1-2-0} & 22 & $87{,}701438$\\
+\ruta{0-4-5-0}   & 10 & $54{,}741601$\\
+\midrule
+Total & 32 & $142{,}443039$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Las cargas son $d_3+d_1+d_2=8+8+6=22$ y $d_4+d_5=7+3=10$.
+Ambas rutas respetan la capacidad y atienden a todos los clientes una sola vez.
+Los arcos seleccionados son $(0,3)$, $(3,1)$, $(1,2)$, $(2,0)$,
+$(0,4)$, $(4,5)$ y $(5,0)$.
+
+Solver ha asignado $u_3=8$, $u_1=19$, $u_2=25$, $u_4=7$ y $u_5=25$.
+Estos valores satisfacen las restricciones MTZ, aunque algunos contienen
+holgura. No son las demandas efectivamente entregadas: las cargas acumuladas
+reales son $8,16,22$ en el primer viaje y $7,10$ en el segundo.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=0.22cm,y=0.22cm,
+  punto/.style={circle,draw=black,fill=white,inner sep=2.2pt},
+  deposito/.style={rectangle,draw=black,fill=black,inner sep=2.5pt}]
+  \coordinate (n0) at (20,4);
+  \coordinate (n1) at (-7,9);
+  \coordinate (n2) at (-3,10);
+  \coordinate (n3) at (-17,-9);
+  \coordinate (n4) at (8,-16);
+  \coordinate (n5) at (7,-20);
+  \draw[thick] (n0)--(n3)--(n1)--(n2)--(n0);
+  \draw[thick,dashed] (n0)--(n4)--(n5)--(n0);
+  \node[deposito,label=right:0] at (n0) {};
+  \node[punto,label=above:1] at (n1) {};
+  \node[punto,label=above:2] at (n2) {};
+  \node[punto,label=left:3] at (n3) {};
+  \node[punto,label=right:4] at (n4) {};
+  \node[punto,label=below:5] at (n5) {};
+\end{tikzpicture}
+\caption{Rutas óptimas sobre las coordenadas de la instancia. Trazo continuo:
+$0-3-1-2-0$. Trazo discontinuo: $0-4-5-0$.}
+\end{figure}
+
+\subsection{Verificación exacta del valor óptimo}
+
+Como comprobación independiente de Solver, el valor óptimo se ha verificado
+mediante enumeración completa. Se examinan
+las $5!=120$ permutaciones de los clientes y, para cada una, las $2^4=16$
+formas de introducir cortes entre clientes consecutivos. Cada bloque
+resultante se interpreta como un viaje que sale del depósito y regresa a él.
+
+Este procedimiento cubre todos los órdenes de visita y todas las particiones
+en rutas. Entre las $120\cdot16=1.920$ representaciones, incluidas las
+equivalentes por simetría o por orden de los viajes, $1.704$ son factibles.
+El menor coste entre ellas es
+\[
+  \boxed{z^*=142{,}44303899076746}.
+\]
+
+El coste obtenido con Solver coincide con este mínimo. La primera ruta es
+la inversa de $0-2-1-3-0$, con el mismo coste por la simetría de las distancias.
+El orden de ejecución de los dos viajes tampoco modifica el objetivo.
+
+\newpage
+\section{Heurística de Clarke y Wright}
+
+La solución inicial consiste en cinco viajes individuales $0-i-0$.
+El ahorro al unir los clientes $i$ y $j$ es
+\[
+ s_{ij}=c_{0i}+c_{0j}-c_{ij}.
+\]
+Los pares se consideran por ahorro decreciente. Solo se unen extremos de
+rutas y la carga resultante no puede superar $Q$. En caso de empate se usa
+el orden ascendente de $i$ y después de $j$. En esta instancia no hay empates.
+
+\begin{center}
+\begin{tabular}{crr@{\qquad}crr}
+\toprule
+Orden & Par & Ahorro & Orden & Par & Ahorro\\
+\midrule
+1 & $1-2$ & $47{,}105683$ & 6  & $3-4$ & $36{,}579641$\\
+2 & $4-5$ & $46{,}495390$ & 7  & $1-5$ & $22{,}551264$\\
+3 & $1-3$ & $46{,}085143$ & 8  & $1-4$ & $21{,}628109$\\
+4 & $3-5$ & $40{,}111274$ & 9  & $2-5$ & $19{,}441640$\\
+5 & $2-3$ & $39{,}386224$ & 10 & $2-4$ & $18{,}862348$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Esquema secuencial}
+
+Se completa una ruta antes de comenzar otra. El par $1-2$ inicia la primera
+ruta, con carga 14. El par $4-5$ no toca la ruta activa y se omite de momento.
+El par $1-3$ permite añadir el cliente 3 por el extremo 1, con carga 22.
+Después, $3-5$ incorpora el cliente 5 y alcanza la capacidad 25. Tras cada
+unión se vuelve a recorrer la lista para buscar una extensión factible.
+El cliente 4 queda fuera y requiere un viaje individual.
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Ruta & Carga & Coste\\
+\midrule
+\ruta{0-5-3-1-2-0} & 25 & $102{,}179540$\\
+\ruta{0-4-0} & 7 & $46{,}647615$\\
+\midrule
+Total & 32 & $148{,}827155$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Esquema paralelo}
+
+Las rutas se construyen simultáneamente. Se aceptan, en este orden,
+los pares $1-2$, $4-5$ y $1-3$. Quedan las rutas $0-2-1-3-0$ y $0-4-5-0$,
+con cargas 22 y 10, respectivamente. Unirlas exigiría cargar 32 unidades y
+se rechaza. El par $2-3$ ya pertenece a la misma ruta; los demás pares
+restantes exceden la capacidad o afectan a nodos interiores.
+El coste total del esquema paralelo es $142{,}443039$.
+
+\section{Comparación de resultados}
+
+La desviación porcentual relativa respecto al óptimo se calcula como
+\[
+ \operatorname{RPD}(\%)=100\,\frac{z_H-z^*}{z^*}.
+\]
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Método & Coste & RPD & Viajes\\
+\midrule
+Modelo con Excel Solver & $142{,}443039$ & 0\,\% & 2\\
+Clarke y Wright secuencial & $148{,}827155$ & 4,4819\,\% & 2\\
+Clarke y Wright paralelo & $142{,}443039$ & 0\,\% & 2\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La variante paralela alcanza el óptimo de esta instancia. La secuencial
+cuesta $6{,}384116$ unidades más, porque asigna el cliente 5 a la primera ruta
+y deja al cliente 4 solo. En el esquema paralelo se forma antes el grupo
+$4-5$, lo que permite obtener las dos rutas óptimas. Este resultado no implica
+que la variante paralela sea siempre óptima ni superior a la secuencial.
+
+\smallskip
+{\footnotesize\textbf{Fuentes:} \textit{Práctica VRP.pdf}, p.\ 1;
+\texttt{Tema 4 VRP\_datos.xlsx}, hoja \texttt{VRP 5}; y
+\textit{Tema4-RoutingProblemsVRP\_Clase 5.pdf}, diapositivas 7--9 y 13--20.}
+
+\end{document}
