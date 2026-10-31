@@ -1,1 +1,0 @@
-# Gestión de Inventarios y Almacenes (LSE)
