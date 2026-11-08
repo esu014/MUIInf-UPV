@@ -1,16 +1,84 @@
-\chapter{Incidente 4: [título pendiente]}
+\chapter{Francia: sabotaje de la refrigeración comercial}
 \label{chap:incidente4}
-\section{Contextualización}
-\pendiente{Identificar organización, producto o sector, cronología con fechas verificadas, fecha de divulgación y relación con el periodo admitido.}
-\section{Descripción técnica}
-\pendiente{Explicar tipo de fallo o incidente, activos y versiones afectados, vector de entrada, condiciones necesarias y cadena causal. Diferenciar explotación confirmada de escenarios posibles. Añadir un esquema propio si aporta claridad y citar la evidencia técnica.}
-\section{CVE y evaluación CVSS, si procede}
-\pendiente{Registrar identificadores verificados y su correspondencia con el caso. Indicar versión CVSS, vector, score, fuente y fecha. Si no hay score publicado, intentar estimarlo con supuestos y razonamiento por métrica; desarrollar el cálculo en el anexo. Justificar expresamente cuando CVE o CVSS no sean aplicables.}
-\section{Impacto técnico y social}
-\pendiente{Analizar a quién afecta y cómo: confidencialidad, integridad, disponibilidad, servicios esenciales, personas y organizaciones. Separar daño observado de impacto potencial. Fechar cifras, citar su origen y señalar incertidumbre; CVSS no sustituye este análisis.}
-\section{Prevención y mitigación}
-\pendiente{Distinguir medidas preventivas, contención, corrección y recuperación. Asociar cada medida al mecanismo del fallo, priorizarla y justificar sus límites y viabilidad. Verificar versiones corregidas y recomendaciones oficiales.}
-\section{Justificación de la selección}
-\pendiente{Aplicar los criterios del capítulo metodológico y explicar qué aporta este caso al conjunto. Evitar justificarlo únicamente por su repercusión mediática.}
+
+\section{Contexto y justificación de selección}
+Durante la noche del 11 al 12 de octubre de 2026,
+varios cientos de supermercados franceses sufrieron
+un ataque contra sus sistemas de refrigeración.
+La activación de ciclos de descongelación alteró
+la conservación de los productos y provocó pérdidas
+de mercancía~\cite{onyphe2026francia}.
+Se selecciona por mostrar cómo un incidente de
+ciberseguridad puede afectar a procesos físicos,
+a la distribución de alimentos y a la actividad
+cotidiana de comercios y consumidores.
+
+\section{Desarrollo del incidente y CVE/CVSS}
+El CERT-FR confirmó compromisos de controladores
+Danfoss AK-SM y AK-SC, además de sistemas Copeland
+y Dixell XWEB~\cite{certfr2026frigorificos}.
+Estos equipos permiten supervisar instalaciones y
+modificar parámetros operativos desde una interfaz
+web. En condiciones normales facilitan el mantenimiento
+remoto; su compromiso permite que una acción digital
+altere el funcionamiento de la
+refrigeración~\cite{claroty2026danfoss}.
+
+Existían vulnerabilidades documentadas en algunos
+modelos. Claroty describió en el AK-SM 800A un mecanismo
+alternativo de autenticación basado en un código
+derivado de la fecha, así como fallos posteriores a
+la autenticación que permitían ejecutar comandos
+o modificar la configuración del servidor
+web~\cite{claroty2026danfoss}.
+
+Como antecedente técnico, \textbf{CVE-2025-41450}
+afecta a la autenticación de la serie AK-SM 8xxA
+anterior a la versión 4.2. Danfoss publica
+\textbf{CVSS v3.1: 8,2, alto}, con el
+vector~\cite{danfoss2025cve41450}:\par
+\noindent{\small\ttfamily
+    CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:L/A:H}\par
+\noindent Esta puntuación corresponde al fallo conocido,
+no al conjunto del incidente. Las fuentes consultadas
+no permiten demostrar que fuera la vía utilizada
+en todos los equipos atacados. Sin identificar
+la vulnerabilidad concreta, no resulta defendible
+asignar un CVSS propio al sabotaje.
+
+\section{Impacto y mitigación}
+La pérdida de refrigeración obligó a retirar alimentos,
+con perjuicios económicos para los establecimientos
+y desperdicio de productos~\cite{onyphe2026francia}.
+Para los consumidores, la alteración de la cadena
+de frío representa un riesgo sanitario si los productos
+afectados llegan a consumirse; no se afirma que hubiera
+intoxicaciones confirmadas.
+El impacto combina manipulación de parámetros,
+pérdida del servicio y consecuencias materiales.
+
+El CERT-FR recomendó eliminar la exposición directa
+a Internet, restablecer el acceso mediante una VPN
+segura o una red protegida, actualizar el firmware
+y cambiar las contraseñas predeterminadas.
+Para equipos Danfoss compatibles, indicó utilizar
+el nivel de seguridad \textit{Strict}.
+Advirtió también que restaurar un equipo sin corregir
+su exposición o vulnerabilidades no evita una nueva
+intrusión, especialmente si ha terminado su
+soporte~\cite{certfr2026frigorificos}.
+Como prevención adicional, se propone supervisión
+independiente de temperatura y alarmas ante cambios
+anómalos de configuración.
+
 \section{Análisis crítico}
-\pendiente{Contrastar fuentes y respuestas de los actores; analizar causas de fondo, decisiones y alternativas. Formular una interpretación propia sustentada en evidencia y reconocer qué no puede concluirse.}
+La comodidad del mantenimiento remoto debe evaluarse
+junto con las consecuencias de perder el control
+del proceso físico. La protección requiere coordinar
+al comercio, al mantenedor y al fabricante, definiendo
+responsabilidades sobre accesos, actualizaciones
+y respuesta.
+Además, encontrar dispositivos expuestos o fallos
+compatibles no demuestra el mecanismo exacto del
+ataque: separar esas evidencias evita convertir
+una hipótesis técnica en una causa confirmada.

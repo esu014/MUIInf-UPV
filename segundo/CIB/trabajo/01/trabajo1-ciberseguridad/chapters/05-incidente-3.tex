@@ -1,16 +1,63 @@
-\chapter{Incidente 3: [título pendiente]}
+\chapter{Moldavia: extracción de datos gubernamentales}
 \label{chap:incidente3}
-\section{Contextualización}
-\pendiente{Identificar organización, producto o sector, cronología con fechas verificadas, fecha de divulgación y relación con el periodo admitido.}
-\section{Descripción técnica}
-\pendiente{Explicar tipo de fallo o incidente, activos y versiones afectados, vector de entrada, condiciones necesarias y cadena causal. Diferenciar explotación confirmada de escenarios posibles. Añadir un esquema propio si aporta claridad y citar la evidencia técnica.}
-\section{CVE y evaluación CVSS, si procede}
-\pendiente{Registrar identificadores verificados y su correspondencia con el caso. Indicar versión CVSS, vector, score, fuente y fecha. Si no hay score publicado, intentar estimarlo con supuestos y razonamiento por métrica; desarrollar el cálculo en el anexo. Justificar expresamente cuando CVE o CVSS no sean aplicables.}
-\section{Impacto técnico y social}
-\pendiente{Analizar a quién afecta y cómo: confidencialidad, integridad, disponibilidad, servicios esenciales, personas y organizaciones. Separar daño observado de impacto potencial. Fechar cifras, citar su origen y señalar incertidumbre; CVSS no sustituye este análisis.}
-\section{Prevención y mitigación}
-\pendiente{Distinguir medidas preventivas, contención, corrección y recuperación. Asociar cada medida al mecanismo del fallo, priorizarla y justificar sus límites y viabilidad. Verificar versiones corregidas y recomendaciones oficiales.}
-\section{Justificación de la selección}
-\pendiente{Aplicar los criterios del capítulo metodológico y explicar qué aporta este caso al conjunto. Evitar justificarlo únicamente por su repercusión mediática.}
+
+\section{Contexto y justificación de selección}
+Entre el 19 y el 23 de octubre de 2026, un ataque contra servicios públicos digitales de Moldavia permitió extraer datos personales. El incidente se comunicó públicamente el día 24~\cite{age2026inicial,age2026datos}. Se selecciona por sus consecuencias para la privacidad y la prestación de servicios públicos, y porque permite examinar los riesgos de conectar numerosos registros mediante aplicaciones con controles de acceso deficientes.
+
+\section{Desarrollo del incidente y CVE/CVSS}
+Según AGE, los atacantes explotaron servicios accesibles
+sin autenticación y utilizaron la información obtenida
+para realizar extracciones adicionales~\cite{age2026datos}.
+La Presidencia describió fallos de autenticación y control
+de acceso que permitieron consultar registros de al menos
+diez instituciones. El ataque comenzó la tarde del 19;
+el día siguiente se registró aproximadamente un millón
+de solicitudes automatizadas, treinta veces el volumen
+habitual~\cite{presidencia2026moldavia}.
+Las fuentes no publican el código vulnerable ni permiten
+identificar con certeza una técnica concreta, como
+inyección SQL.
+
+Los comunicados consultados no proporcionan CVE ni CVSS.
+Como ejercicio propio, se estima un escenario de lectura
+remota no autorizada siguiendo CVSS v3.1~\cite{firstcvss31}:\par
+\noindent{\small\ttfamily
+    CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N}\par
+\noindent El resultado es 7,5, alto, para este escenario hipotético de lectura no autorizada. Se asumen complejidad baja y alcance sin cambios; integridad y disponibilidad se fijan en cero para delimitar el cálculo, no porque se haya demostrado la ausencia de esos impactos. La documentación pública resulta insuficiente para asignar una puntuación definitiva a la vulnerabilidad real.
+
+\section{Impacto y mitigación}
+AGE estimó inicialmente extracciones asociadas a unos
+750.000 identificadores personales. Entre las categorías
+expuestas figuraban identificación, relaciones familiares,
+prestaciones sociales e información financiera; no todas
+afectaban a cada persona~\cite{age2026datos}.
+Una evaluación posterior redujo el número de ciudadanos
+afectados a aproximadamente 450.000, que debían ser
+notificados~\cite{presidencia2026moldavia}.
+La información facilita suplantaciones y fraudes dirigidos,
+aunque conocer un IBAN no permite por sí solo disponer
+del dinero. AGE no identificó modificaciones de los
+registros ni exposición de datos de tarjetas
+bancarias~\cite{age2026datos}.
+
+La desconexión preventiva dejó servicios temporalmente
+inaccesibles~\cite{age2026inicial}.
+La respuesta posterior incluyó correcciones en MPass,
+verificaciones adicionales de autorización y refuerzo
+de las plataformas~\cite{presidencia2026moldavia}.
+Como prevención se proponen controles de acceso por
+operación y registro, límites de consultas y alertas
+ante extracciones anómalas. Para los ciudadanos, AGE
+recomendó verificar las solicitudes por canales oficiales
+y no facilitar contraseñas ni códigos~\cite{age2026datos}.
+
 \section{Análisis crítico}
-\pendiente{Contrastar fuentes y respuestas de los actores; analizar causas de fondo, decisiones y alternativas. Formular una interpretación propia sustentada en evidencia y reconocer qué no puede concluirse.}
+El caso evidencia que contener el acceso no revierte
+la pérdida de confidencialidad. La recuperación debe
+combinar restauración segura, notificación y prevención
+del fraude posterior.
+También exige distinguir solicitudes, registros e individuos:
+sus cifras no son equivalentes. La revisión del número
+de afectados demuestra por qué deben fecharse las
+estimaciones y actualizarse las conclusiones conforme
+avanza la investigación.

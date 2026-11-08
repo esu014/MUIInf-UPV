@@ -1,16 +1,72 @@
-\chapter{Incidente 1: [título pendiente]}
+\chapter{PHP2Shell: campaña de explotación de octubre}
 \label{chap:incidente1}
-\section{Contextualización}
-\pendiente{Identificar organización, producto o sector, cronología con fechas verificadas, fecha de divulgación y relación con el periodo admitido.}
-\section{Descripción técnica}
-\pendiente{Explicar tipo de fallo o incidente, activos y versiones afectados, vector de entrada, condiciones necesarias y cadena causal. Diferenciar explotación confirmada de escenarios posibles. Añadir un esquema propio si aporta claridad y citar la evidencia técnica.}
-\section{CVE y evaluación CVSS, si procede}
-\pendiente{Registrar identificadores verificados y su correspondencia con el caso. Indicar versión CVSS, vector, score, fuente y fecha. Si no hay score publicado, intentar estimarlo con supuestos y razonamiento por métrica; desarrollar el cálculo en el anexo. Justificar expresamente cuando CVE o CVSS no sean aplicables.}
-\section{Impacto técnico y social}
-\pendiente{Analizar a quién afecta y cómo: confidencialidad, integridad, disponibilidad, servicios esenciales, personas y organizaciones. Separar daño observado de impacto potencial. Fechar cifras, citar su origen y señalar incertidumbre; CVSS no sustituye este análisis.}
-\section{Prevención y mitigación}
-\pendiente{Distinguir medidas preventivas, contención, corrección y recuperación. Asociar cada medida al mecanismo del fallo, priorizarla y justificar sus límites y viabilidad. Verificar versiones corregidas y recomendaciones oficiales.}
-\section{Justificación de la selección}
-\pendiente{Aplicar los criterios del capítulo metodológico y explicar qué aporta este caso al conjunto. Evitar justificarlo únicamente por su repercusión mediática.}
+
+\section{Contexto y justificación de selección}
+Se analiza la campaña de octubre de 2026 que utilizó PHP2Shell,
+dos vulnerabilidades del intérprete PHP, para comprometer
+servidores y dispositivos de seguridad. Dream reconstruyó una
+operación con 25 servidores comprometidos; Unit 42 confirmó las
+herramientas y los resultados comunicados~\cite{dream2026php,unit422026php}.
+Se selecciona por mostrar cómo un fallo en un componente compartido
+puede convertir un dispositivo perimetral en una vía de acceso
+a la infraestructura interna.
+
+\section{Desarrollo del incidente y CVE/CVSS}
+La operación combinó ejecución remota mediante PHP2Shell con
+una escalada de privilegios del núcleo Linux,
+CVE-2026-46300. Según Dream, los atacantes identificaron equipos
+PAN-OS expuestos, seleccionaron versiones compatibles con su
+explotación y comprometieron sus interfaces de gestión.
+Los días 23 y 24 de octubre accedieron a dispositivos de un
+entorno que los investigadores consideraron vinculado al
+Gobierno estadounidense. Desde un cortafuegos establecieron
+un túnel hacia la red interna y comprometieron un servidor
+de gestión, obteniendo credenciales y enumerando
+Active Directory~\cite{dream2026php}.
+
+PHP2Shell comprende \textbf{CVE-2026-109618}, donde el agotamiento
+de memoria deja datos de petición incorrectamente inicializados,
+y \textbf{CVE-2026-109619}, donde otra petición atendida por el mismo
+trabajador utiliza referencias a memoria liberada
+(\textit{use-after-free}). La ejecución inicial tiene los permisos
+del trabajador web; el acceso como administrador deriva del
+encadenamiento con el fallo del núcleo~\cite{php2026oom,php2026stale,dream2026php}.
+
+PHP Group publica para ambos \textbf{CVSS v4.0: 9,2, crítico},
+con el vector base:\par
+\noindent{\small\ttfamily
+    CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/\allowbreak
+    VC:H/VI:H/VA:H/SC:N/SI:N/SA:N}\par
+La valoración refleja acceso por red sin autenticación ni
+interacción, complejidad alta y condiciones de ejecución
+necesarias. No es un cálculo propio~\cite{php2026oom,php2026stale}.
+
+\section{Impacto y mitigación}
+Los compromisos permitieron acceso persistente, extracción de
+credenciales y reconocimiento interno; no se acreditó el éxito
+de todas las acciones posteriores~\cite{dream2026php}.
+Para las organizaciones, esto compromete el control de sus
+redes; para quienes utilizan sus servicios, supone riesgo de
+exposición de información e interrupción del acceso.
+No existe en las fuentes consultadas un balance global de
+personas afectadas. Sí hubo consecuencias preventivas observables:
+el NCSC neerlandés retiró temporalmente su web y comunicó
+cierres similares en otras entidades~\cite{ncsc2026php}.
+
+La corrección exige actualizar a PHP 8.2.35, 8.3.36, 8.4.27
+o 8.5.12, según la rama, o aplicar los parches del proveedor.
+Las modificaciones de configuración no ofrecen protección
+completa~\cite{php2026aviso}. En PAN-OS deben instalarse sus
+actualizaciones específicas y restringirse la gestión a redes
+de confianza~\cite{unit422026php}.
+
 \section{Análisis crítico}
-\pendiente{Contrastar fuentes y respuestas de los actores; analizar causas de fondo, decisiones y alternativas. Formular una interpretación propia sustentada en evidencia y reconocer qué no puede concluirse.}
+Amazon observó intentos desde el 17 de octubre, sin confirmar
+entonces su éxito~\cite{aws2026php}; CISA incorporó ambos CVE
+al catálogo de vulnerabilidades explotadas el
+día 26~\cite{cisa2026kev}.
+Esta evolución obliga a distinguir exposición, intento y
+compromiso. La principal lección es que parchear una
+vulnerabilidad no elimina los accesos persistentes ni las
+credenciales robadas: la recuperación debe investigar también
+los sistemas alcanzados desde el dispositivo inicial.

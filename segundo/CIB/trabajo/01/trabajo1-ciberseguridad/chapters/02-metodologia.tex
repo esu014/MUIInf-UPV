@@ -1,12 +1,47 @@
-\chapter{Metodología de selección y fuentes}
-\label{chap:metodologia}
-\section{Criterios de inclusión y exclusión}
-\pendiente{Definir relevancia, actualidad, profundidad técnica, impacto social y disponibilidad de evidencia. Documentar candidatos descartados y evitar contar varias noticias del mismo hecho como casos diferentes.}
-\section{Estrategia de búsqueda}
-\pendiente{Registrar consultas, repositorios, idiomas, fechas de búsqueda y criterios de cierre. Priorizar avisos del fabricante, CERT/CSIRT, registros de vulnerabilidades, informes oficiales y trabajos originales.}
-\section{Evaluación y contraste de fuentes}
-\pendiente{Identificar autoría, fecha, versión, proximidad al hecho y posibles intereses. Contrastar afirmaciones relevantes con evidencia independiente; varias noticias que reproducen el mismo comunicado no son fuentes independientes.}
-\section{Tratamiento técnico y CVSS}
-\pendiente{Distinguir incidente, vulnerabilidad y amenaza. Registrar CVE cuando exista. Para CVSS, anotar versión, vector, puntuación, emisor y fecha; distinguir valores publicados de estimaciones propias. Si falta un score y el caso es evaluable, intentar calcularlo justificando cada métrica y sus supuestos. Si no aplica, explicar por qué; no inventar CVE ni forzar una puntuación.}
-\section{Trazabilidad, limitaciones e integridad académica}
-\pendiente{Vincular cada afirmación verificable con su fuente. Separar hechos, estimaciones e interpretación propia. Registrar contradicciones, incertidumbres y límites de acceso. Declarar herramientas de apoyo y su uso conforme a las normas de la asignatura.}
+% Continúa el capítulo y la página de la introducción.
+\section{Selección y verificación de fuentes}
+La búsqueda combinó comunidades especializadas,
+buscadores y publicaciones de organismos de seguridad.
+Los debates se utilizaron para localizar candidatos;
+las afirmaciones se contrastaron prioritariamente
+con avisos de fabricantes, registros CVE, informes
+de investigación y comunicados oficiales.
+
+La selección atendió a cuatro criterios: actividad
+documentada dentro del periodo, relevancia del impacto,
+disponibilidad de evidencia y diversidad de mecanismos
+y sectores. Se excluyeron noticias recientes que
+describían incidentes anteriores al curso.
+La muestra combina fallos de memoria, compromiso
+de acceso remoto, extracción de datos y alteración
+de procesos físicos; no pretende representar
+estadísticamente todos los incidentes del periodo.
+
+Para cada caso se reconstruyó la cronología y se
+identificaron los sistemas afectados, el mecanismo
+descrito y las medidas de respuesta.
+Se contrastaron las publicaciones iniciales con
+actualizaciones posteriores, diferenciando fuentes
+complementarias de noticias que reproducían
+un mismo comunicado.
+
+\section{Criterios de análisis y limitaciones}
+Se separaron hechos observados, valoraciones
+de los investigadores e interpretaciones propias.
+Las cifras se contextualizaron para no confundir
+intentos, registros, personas y sistemas comprometidos.
+
+Cuando existían CVE y CVSS publicados, se identificaron
+su fuente y versión. Cuando faltaban, se valoró
+la posibilidad de calcularlos: la estimación
+de Moldavia se presenta como un escenario condicionado,
+mientras que en los casos sin métricas suficientemente
+documentadas se explicita la limitación.
+Los valores de versiones distintas no se utilizan
+para ordenar los incidentes.
+
+El análisis del uso de IA distingue herramientas
+observadas, funciones atribuidas y autonomía demostrada.
+La comparación y las conclusiones se limitan
+a la evidencia pública consultada y reconocen
+la incertidumbre de investigaciones todavía abiertas.
