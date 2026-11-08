@@ -1,16 +1,75 @@
-\chapter{Incidente 2: [título pendiente]}
+\chapter{Ivanti: intrusión mediante una cadena de fallos}
 \label{chap:incidente2}
-\section{Contextualización}
-\pendiente{Identificar organización, producto o sector, cronología con fechas verificadas, fecha de divulgación y relación con el periodo admitido.}
-\section{Descripción técnica}
-\pendiente{Explicar tipo de fallo o incidente, activos y versiones afectados, vector de entrada, condiciones necesarias y cadena causal. Diferenciar explotación confirmada de escenarios posibles. Añadir un esquema propio si aporta claridad y citar la evidencia técnica.}
-\section{CVE y evaluación CVSS, si procede}
-\pendiente{Registrar identificadores verificados y su correspondencia con el caso. Indicar versión CVSS, vector, score, fuente y fecha. Si no hay score publicado, intentar estimarlo con supuestos y razonamiento por métrica; desarrollar el cálculo en el anexo. Justificar expresamente cuando CVE o CVSS no sean aplicables.}
-\section{Impacto técnico y social}
-\pendiente{Analizar a quién afecta y cómo: confidencialidad, integridad, disponibilidad, servicios esenciales, personas y organizaciones. Separar daño observado de impacto potencial. Fechar cifras, citar su origen y señalar incertidumbre; CVSS no sustituye este análisis.}
-\section{Prevención y mitigación}
-\pendiente{Distinguir medidas preventivas, contención, corrección y recuperación. Asociar cada medida al mecanismo del fallo, priorizarla y justificar sus límites y viabilidad. Verificar versiones corregidas y recomendaciones oficiales.}
-\section{Justificación de la selección}
-\pendiente{Aplicar los criterios del capítulo metodológico y explicar qué aporta este caso al conjunto. Evitar justificarlo únicamente por su repercusión mediática.}
+
+\section{Contexto y justificación de selección}
+El 5 de octubre de 2026, Volexity inició una investigación
+que identificó actividad maliciosa desde el día 3 en una VPN
+Ivanti Connect Secure 22.8R2.4, actualizada en aquel momento.
+El atacante, denominado UTA0576, encadenó vulnerabilidades
+para ejecutar comandos como administrador sin autenticarse.
+Se selecciona porque muestra cómo comprometer una herramienta
+de acceso remoto puede abrir el camino hacia los sistemas
+que debería proteger~\cite{volexity2026ivanti}.
+
+\section{Desarrollo del incidente y CVE/CVSS}
+El atacante eludió los controles de autenticación y alcanzó
+funciones internas de carga de archivos. Aprovechó el intervalo
+entre la escritura y eliminación de un archivo rechazado para
+ejecutar código. Después manipuló datos de configuración
+utilizados por un servicio privilegiado y obtuvo permisos
+\textit{root}~\cite{volexity2026ivanti}.
+
+Los registros oficiales permiten distinguir tres componentes:
+\textbf{CVE-2026-104935}, evasión de autenticación que permite
+ejecutar comandos remotos, con \textbf{CVSS v3.1: 8,6};
+\textbf{CVE-2026-118527}, nombres predecibles que permiten
+depositar archivos en ubicaciones conocidas, con
+\textbf{CVSS v3.1: 4,3}; y \textbf{CVE-2026-111357},
+escalada de privilegios mediante confianza indebida en la
+configuración DSCache, valorada con \textbf{CVSS v3.1: 7,0}
+en el registro de MITRE. Son puntuaciones publicadas para
+fallos individuales, no una valoración conjunta de la
+cadena~\cite{cve2026ivanti104935,cve2026ivanti118527,
+    cve2026ivanti111357}.
+
+El primer fallo permite acceso por red, sin privilegios
+previos ni interacción, según su vector oficial:\par
+\noindent{\small\ttfamily
+    CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:L}\par
+\noindent La combinación elimina las barreras que limitarían
+la explotación aislada de los otros
+componentes~\cite{cve2026ivanti104935}.
+
+\section{Impacto y mitigación}
+Volexity documentó extracción de credenciales, exfiltración
+de metadatos de Active Directory y búsquedas de contraseñas
+administrativas y claves de recuperación BitLocker.
+El atacante también borró registros y modificó componentes
+en memoria; el comprobador de integridad de Ivanti no
+detectaba esas modificaciones~\cite{volexity2026ivanti}.
+Para las organizaciones afectadas, las credenciales robadas
+pueden facilitar accesos posteriores y suplantaciones; para
+sus usuarios, implican riesgos sobre información y servicios.
+Las fuentes no ofrecen un recuento global de personas
+afectadas.
+
+La respuesta requiere instalar una versión que corrija
+todos los componentes, según la rama: el aviso canadiense
+actualizado recoge 25.1.1.3, 25.1.3.1 y 22.8R2.6.
+CISA incorporó el primer CVE a su catálogo el 13 de octubre
+y los otros dos el día 30~\cite{canada2026ivanti}.
+Además de actualizar, deben investigarse los accesos
+desde la VPN y revocarse las credenciales comprometidas;
+una comprobación de integridad limpia no descarta la
+intrusión~\cite{volexity2026ivanti}.
+
 \section{Análisis crítico}
-\pendiente{Contrastar fuentes y respuestas de los actores; analizar causas de fondo, decisiones y alternativas. Formular una interpretación propia sustentada en evidencia y reconocer qué no puede concluirse.}
+La principal lección es que estar actualizado no elimina
+el riesgo de vulnerabilidades desconocidas. Tampoco basta
+con valorar cada fallo por separado: una debilidad moderada
+puede resultar decisiva dentro de una cadena.
+La defensa debe combinar actualización, limitación de
+privilegios y vigilancia de los accesos internos.
+La ausencia de alteraciones detectables en disco debe
+interpretarse junto con otras evidencias, no como garantía
+de seguridad.

@@ -1,16 +1,91 @@
-\chapter{Incidente 5: [título pendiente]}
+\chapter{Corea del Sur: intrusiones financieras con IA}
 \label{chap:incidente5}
-\section{Contextualización}
-\pendiente{Identificar organización, producto o sector, cronología con fechas verificadas, fecha de divulgación y relación con el periodo admitido.}
-\section{Descripción técnica}
-\pendiente{Explicar tipo de fallo o incidente, activos y versiones afectados, vector de entrada, condiciones necesarias y cadena causal. Diferenciar explotación confirmada de escenarios posibles. Añadir un esquema propio si aporta claridad y citar la evidencia técnica.}
-\section{CVE y evaluación CVSS, si procede}
-\pendiente{Registrar identificadores verificados y su correspondencia con el caso. Indicar versión CVSS, vector, score, fuente y fecha. Si no hay score publicado, intentar estimarlo con supuestos y razonamiento por métrica; desarrollar el cálculo en el anexo. Justificar expresamente cuando CVE o CVSS no sean aplicables.}
-\section{Impacto técnico y social}
-\pendiente{Analizar a quién afecta y cómo: confidencialidad, integridad, disponibilidad, servicios esenciales, personas y organizaciones. Separar daño observado de impacto potencial. Fechar cifras, citar su origen y señalar incertidumbre; CVSS no sustituye este análisis.}
-\section{Prevención y mitigación}
-\pendiente{Distinguir medidas preventivas, contención, corrección y recuperación. Asociar cada medida al mecanismo del fallo, priorizarla y justificar sus límites y viabilidad. Verificar versiones corregidas y recomendaciones oficiales.}
-\section{Justificación de la selección}
-\pendiente{Aplicar los criterios del capítulo metodológico y explicar qué aporta este caso al conjunto. Evitar justificarlo únicamente por su repercusión mediática.}
+
+\section{Contexto y justificación de selección}
+CrowdStrike documentó una campaña contra entidades
+financieras surcoreanas activa entre finales de septiembre
+y principios de octubre de 2026. Su investigación,
+publicada el 7 de octubre, relacionó la extracción de datos
+con infraestructura que utilizaba ARTEX, una herramienta
+de pruebas de penetración basada en agentes de
+inteligencia artificial~\cite{crowdstrike2026artex}.
+Se selecciona por aportar evidencia sobre el empleo
+ofensivo de IA y permitir distinguir sus capacidades
+observadas de las afirmaciones sobre ataques
+completamente autónomos.
+
+\section{Desarrollo del incidente y CVE/CVSS}
+El análisis posterior de Zscaler ThreatLabz identifica
+inyección SQL y evasión de autenticación en aplicaciones
+web periféricas, incluidos portales de consulta de clientes
+y servicios de aplicaciones móviles para empleados.
+Según los investigadores, agentes basados en modelos
+de lenguaje participaron en el reconocimiento y
+la explotación~\cite{zscaler2026corea}.
+
+La inyección SQL permite que entradas manipuladas
+alteren las consultas a una base de datos; la evasión
+de autenticación permite acceder sin superar correctamente
+la comprobación de identidad. Son fallos de las aplicaciones
+atacadas, no vulnerabilidades de ARTEX.
+ThreatLabz describe una secuencia de reconocimiento,
+explotación, extracción de información y búsqueda de
+vías para comercializarla~\cite{zscaler2026corea}.
+
+CrowdStrike aporta evidencias complementarias:
+configuraciones de ARTEX e historiales de sesiones
+de asistentes de programación encontrados en
+infraestructura asociada al atacante.
+Esto documenta el uso de IA, pero no demuestra que
+todas las acciones fueran autónomas ni que cada
+brecha del sector perteneciera a la misma
+campaña~\cite{crowdstrike2026artex,fsc2026octubre}.
+
+Los informes no identifican CVE ni publican CVSS
+para los fallos concretos.
+Se ha considerado una evaluación propia, pero conocer
+la categoría del fallo no determina sus métricas:
+faltan los privilegios necesarios, las condiciones
+de explotación y los límites del sistema afectado.
+No se asigna una cifra definitiva ni se utiliza
+la cantidad de datos sustraídos como sustituto
+de una evaluación técnica.
+
+\section{Impacto y mitigación}
+El 14 de octubre, la FSC contabilizaba brechas en
+16 entidades y aproximadamente 100.000 registros
+de clientes, con nombres, información de contacto
+e identificadores personales. No se habían comunicado
+filtraciones de contraseñas de cuentas ni números
+de tarjetas~\cite{fsc2026octubre}.
+El balance sectorial del 5 de noviembre ascendía
+a 40 incidentes notificados en 37 entidades y unos
+473.000 casos de exposición de información
+personal~\cite{fsc2026noviembre}.
+Estas cifras describen el conjunto sectorial, no
+el alcance demostrado de la campaña de ARTEX.
+
+Para los afectados, la exposición facilita
+suplantaciones y fraudes dirigidos.
+La FSC ordenó medidas de contención, parches,
+suspensión de servicios vulnerables y protección
+de clientes~\cite{fsc2026octubre}.
+Posteriormente anunció inspecciones de API,
+autenticación, controles de acceso y sistemas
+periféricos, además de reforzar la vigilancia
+de operaciones sospechosas~\cite{fsc2026noviembre}.
+Como prevención adicional se propone limitar
+privilegios y detectar consultas o extracciones
+anómalas, independientemente de la herramienta
+utilizada por el atacante.
+
 \section{Análisis crítico}
-\pendiente{Contrastar fuentes y respuestas de los actores; analizar causas de fondo, decisiones y alternativas. Formular una interpretación propia sustentada en evidencia y reconocer qué no puede concluirse.}
+La aportación del caso no es demostrar que la IA
+pueda vulnerar cualquier banco, sino documentar
+su integración en operaciones ofensivas reales.
+La respuesta debe centrarse en los accesos y datos
+que pueden comprometerse, sin depender de reconocer
+una herramienta concreta.
+Separar evidencia técnica, atribución y estadísticas
+sectoriales evita exagerar la autonomía del atacante
+y permite valorar las medidas defensivas con rigor.
