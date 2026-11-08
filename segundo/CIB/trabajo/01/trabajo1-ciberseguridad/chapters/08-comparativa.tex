@@ -1,22 +1,105 @@
-\chapter{Análisis comparativo}
-\section{Matriz de comparación}
+\chapter{Comparación de los cinco casos}
+\label{chap:comparativa}
+
+\section{Síntesis de resultados}
+La tabla~\ref{tab:comparativa} compara el mecanismo
+documentado, las consecuencias y la prioridad defensiva.
+Distingue los hechos observados de las limitaciones
+de la información pública.
+
 \begin{table}[htbp]
-\centering\small
-\begin{tabularx}{\textwidth}{lXXXX}
-\toprule
-Caso & Causa / vector & Afectados e impacto & CVSS / aplicabilidad & Mitigación clave\\
-\midrule
-1 & [Pendiente] & [Pendiente] & [Pendiente] & [Pendiente]\\
-2 & [Pendiente] & [Pendiente] & [Pendiente] & [Pendiente]\\
-3 & [Pendiente] & [Pendiente] & [Pendiente] & [Pendiente]\\
-4 & [Pendiente] & [Pendiente] & [Pendiente] & [Pendiente]\\
-5 & [Pendiente] & [Pendiente] & [Pendiente] & [Pendiente]\\
-\bottomrule
-\end{tabularx}
-\caption{Matriz pendiente de completar con los resultados de los cinco casos.}
-\label{tab:comparativa}
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabularx}{\textwidth}{
+        @{}p{2.1cm}XXX@{}
+        }
+        \toprule
+        Caso                                  & Mecanismo & Impacto observado & Prioridad defensiva \\
+        \midrule
+        PHP2Shell                             &
+        Fallos de memoria y encadenamiento con escalada
+        de privilegios.                       &
+        Compromiso de servidores, robo de credenciales
+        y acceso interno.                     &
+        Actualizar PHP y productos que lo integran;
+        investigar accesos previos.                                                                 \\
+
+        Ivanti                                &
+        Evasión de autenticación, ejecución de código
+        y escalada a \textit{root}.           &
+        Extracción de credenciales y metadatos
+        del directorio corporativo.           &
+        Corregir toda la cadena, realizar análisis
+        forense y revocar credenciales.                                                             \\
+
+        Moldavia                              &
+        Deficiencias de autenticación y autorización
+        en servicios públicos.                &
+        Extracción de datos personales e interrupciones
+        preventivas.                          &
+        Validar permisos por operación y registro;
+        detectar consultas anómalas.                                                                \\
+
+        Francia                               &
+        Manipulación de controladores de refrigeración;
+        vector concreto no acreditado.        &
+        Alteración de la cadena de frío
+        y pérdida de alimentos.               &
+        Retirar la exposición directa y asegurar
+        el mantenimiento remoto.                                                                    \\
+
+        Corea del Sur                         &
+        Inyección SQL y evasión de autenticación,
+        según ThreatLabz, con apoyo de ARTEX. &
+        Extracción de información personal
+        y financiera.                         &
+        Corregir aplicaciones periféricas y
+        controlar accesos y extracciones.                                                           \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Comparación de los incidentes analizados.
+        Síntesis basada en las fuentes de los capítulos anteriores.}
+    \label{tab:comparativa}
 \end{table}
-\section{Patrones, diferencias y lecciones transversales}
-\pendiente{Comparar causas técnicas y organizativas, exposición, respuesta e impacto social. Explicar diferencias de contexto y evitar comparar directamente scores de versiones CVSS distintas.}
+
+\section{Patrones y diferencias}
+El primer patrón es la importancia de las interfaces
+accesibles desde el exterior. Las VPN, aplicaciones
+periféricas y consolas de mantenimiento conectan
+necesidades legítimas de acceso con activos sensibles.
+Su exposición exige controles acordes con las
+consecuencias de un compromiso, especialmente cuando
+permiten alcanzar redes internas o modificar procesos
+físicos~\cite{volexity2026ivanti,certfr2026frigorificos,
+    zscaler2026corea}.
+
+El segundo patrón es que contener el punto de entrada
+no revierte todo el daño. En PHP2Shell e Ivanti,
+la recuperación debe considerar credenciales y sistemas
+alcanzados; en Moldavia y Corea del Sur, la información
+extraída puede facilitar fraudes posteriores.
+Francia añade una diferencia decisiva: restaurar
+el controlador no recupera los alimentos
+perdidos~\cite{dream2026php,volexity2026ivanti,
+    age2026datos,zscaler2026corea,onyphe2026francia}.
+
+Finalmente, los casos requieren respuestas distintas.
+Los fallos conocidos demandan actualización y comprobación
+de versiones; las deficiencias de autorización exigen
+revisar qué puede consultar cada usuario.
+El caso surcoreano incorpora IA a la ejecución ofensiva,
+pero las debilidades descritas siguen requiriendo
+controles de seguridad de aplicaciones
+convencionales~\cite{zscaler2026corea}.
+
 \section{Límites de la comparación}
-\pendiente{Valorar sesgos de selección, calidad desigual de las fuentes, falta de datos y límites de generalización de cinco casos.}
+No se establece una clasificación por CVSS:
+PHP2Shell utiliza la versión 4.0 e Ivanti la 3.1,
+mientras que otros casos carecen de puntuaciones
+confirmadas para el fallo explotado.
+Tampoco son equivalentes servidores comprometidos,
+registros extraídos, personas afectadas y establecimientos.
+La comparación es cualitativa y está limitada por
+investigaciones abiertas y niveles desiguales
+de detalle técnico.
