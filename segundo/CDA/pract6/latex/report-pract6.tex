@@ -1,0 +1,533 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+
+\usepackage{geometry}
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textit{Practical 6: Model Evaluation}}
+\lhead{\textit{Data Science --- ETSINF (UPV)}}
+\cfoot{\thepage}
+
+\lstset{
+    language=R,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{teal},
+    numbers=none,
+    frame=lines,
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    captionpos=b,
+    tabsize=2
+}
+
+\title{\textbf{Practical 6: Model Evaluation}\\[0.4ex] \Large Data Science (CDA) --- Academic Lab Report}
+\author{\textbf{Enrique Sopeña} \\ 
+Máster Universitari en Enginyeria Informàtica (MUIInf) \\
+Escola Tècnica Superior d'Enginyeria Informàtica (ETSINF) \\ 
+Universitat Politècnica de València}
+\date{November 8, 2026}
+
+
+\setlength{\headheight}{14pt}
+\lstdefinestyle{console}{
+    language={},
+    literate={‘}{{\textquoteleft}}1 {’}{{\textquoteright}}1,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    keywordstyle=\color{black},
+    commentstyle=\color{black},
+    stringstyle=\color{black},
+    columns=fullflexible,
+    keepspaces=true
+}
+
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\maketitle
+\begin{abstract}
+    This practical compares five classifiers for the tic-tac-toe dataset using the same stratified training/test split and ten-fold cross-validation. The 958 configurations are divided into 672 training and 286 test observations. The linear support vector machine achieves the highest recorded cross-validation accuracy (0.980663), test accuracy (0.989510), test kappa (0.976661), and test AUC (0.998704). The neural network and k-nearest neighbors also perform well, whereas Naive Bayes and the default decision tree are substantially weaker. The linear SVM is the recommended model for this experiment, subject to the limitations of a single split.
+\end{abstract}
+\vspace{0.8em}\hrule\vspace{1em}
+\section{Introduction and Experimental Setup}
+The target is whether player \texttt{x} wins in a final tic-tac-toe board configuration. Nine categorical predictors describe the board squares, with values \texttt{x}, \texttt{o}, and \texttt{b} (blank). The class is \texttt{positive} for a win by \texttt{x} and \texttt{negative} otherwise. The assignment specifies Naive Bayes, a decision tree, a neural network, k-nearest neighbors, and a linear support vector machine, trained with ten-fold cross-validation and default tuning settings.
+
+The code below is embedded directly in this document and follows the supplied \texttt{pract6.R}. Numerical tables transcribe \texttt{salida.txt}; derived class-specific rates are calculated from its confusion matrices. The original split, seeds, model calls, and default tuning procedure are retained. Cross-validation estimates are distinguished from test results throughout. The supplied script was also rerun to generate the English-labelled ROC figure; its CV and test summary metrics matched the supplied log to the printed precision. No replacement performance estimates are used.
+
+\section{Exercise 1: Loading and Inspecting the Data}
+\subsection{Objective and Implementation}
+The file is loaded without a header. Columns are named from left to right and top to bottom: \texttt{A.1}, \texttt{B.1}, and \texttt{C.1} identify the first row, and so on. Converting all columns to factors represents board states and the target as categorical variables.
+\begin{lstlisting}
+tic_tac_toe <- read.table("dataset/tic-tac-toe.data.txt", header = FALSE, sep = ",")
+tic_tac_toe_headers <- c("A.1", "B.1", "C.1", "A.2", "B.2", "C.2", "A.3", "B.3", "C.3", "Class")
+names(tic_tac_toe) <- tic_tac_toe_headers
+tic_tac_toe[] <- lapply(tic_tac_toe, as.factor)
+
+if (sum(is.na(tic_tac_toe)) > 0) {
+  cat("\nThere are ", sum(is.na(tic_tac_toe)), " null values\n")
+} else {
+  cat("\nThere isn't any null values\n")
+}
+\end{lstlisting}
+
+\subsection{Results and Discussion}
+
+The supplied output reports no missing values. All 958 configurations are retained. The data contain 626 positive cases and 332 negative cases, giving a positive proportion of approximately 65.34\%. No numerical scaling or imputation is introduced.
+
+\section{Exercise 2: Stratified Training/Test Split}
+\subsection{Objective and Implementation}
+The stratified split uses \texttt{createDataPartition()} with seed 123 and a training proportion of 0.7. Sampling within each class approximately preserves its original frequency.
+\begin{lstlisting}
+library(pbkrtest)
+library(caret)
+set.seed(123)
+
+train_index <- createDataPartition(
+  tic_tac_toe$Class,
+  p = 0.7,
+  list = FALSE,
+  times = 1
+)
+tic_tac_toe_train <- tic_tac_toe[train_index, ]
+tic_tac_toe_test <- tic_tac_toe[-train_index, ]
+
+cat("\nClass Proportion: Original\n")
+prop.table(table(tic_tac_toe$Class))
+cat("\nClass Proportion: Train\n")
+prop.table(table(tic_tac_toe_train$Class))
+cat("\nClass Proportion: Test\n")
+prop.table(table(tic_tac_toe_test$Class))
+
+split_summary <- data.frame(
+  Set = c("Train", "Test"),
+  Observations = c(nrow(tic_tac_toe_train), nrow(tic_tac_toe_test)),
+  Percentage = 100 * (c(nrow(tic_tac_toe_train), nrow(tic_tac_toe_test)) / nrow(tic_tac_toe))
+)
+print(split_summary, row.names = FALSE)
+\end{lstlisting}
+
+\subsection{Results and Discussion}
+
+\begin{table}[htbp]\centering
+    \begin{tabular}{lrrrr}\toprule
+        Set          & Observations & Share (\%) & Negative & Positive \\\midrule
+        Full dataset & 958          & 100.000    & 332      & 626      \\
+        Training     & 672          & 70.146     & 233      & 439      \\
+        Test         & 286          & 29.854     & 99       & 187      \\\bottomrule
+    \end{tabular}
+    \caption{Observed split and class counts. Counts follow from the recorded proportions and test matrices.}
+\end{table}
+The positive proportions are 0.653445 overall, 0.653274 in training, and 0.653846 in testing. The realised split differs slightly from exactly 70/30 because class-wise sample sizes must be integers. The test observations are excluded from model fitting and cross-validation.
+
+\section{Exercise 3: Training and Cross-validation}
+\subsection{Objective and Implementation}
+The same seed is reset before each model fit, as requested. The control object specifies ten-fold cross-validation with one repetition and class probabilities. No custom tuning grid or tuning length is supplied. The methods are \texttt{nb} (klaR), \texttt{rpart} (rpart), \texttt{nnet} (nnet), \texttt{knn} (caret's k-nearest-neighbor implementation), and \texttt{svmLinear} (kernlab). Caret's formula interface encodes the categorical predictors for these fits. The default selection metric is accuracy; kappa is also reported.
+\begin{lstlisting}
+fitControl <- trainControl(
+  method = "cv",
+  number = 10,
+  classProbs = TRUE
+)
+
+# Naive Bayes
+set.seed(123)
+model_bayes <- train(
+  Class ~ .,
+  data = tic_tac_toe_train,
+  trControl = fitControl,
+  method = "nb"
+)
+
+# Decision Tree
+set.seed(123)
+model_tree <- train(
+  Class ~ .,
+  data = tic_tac_toe_train,
+  trControl = fitControl,
+  method = "rpart"
+)
+
+# Neural Network
+set.seed(123)
+model_nn <- train(
+  Class ~ .,
+  data = tic_tac_toe_train,
+  trControl = fitControl,
+  method = "nnet"
+)
+
+# k-Nearest Neighbors
+set.seed(123)
+model_knn <- train(
+  Class ~ .,
+  data = tic_tac_toe_train,
+  trControl = fitControl,
+  method = "knn"
+)
+
+# Support Vector Machine (with a linear kernel)
+set.seed(123)
+model_svm <- train(
+  Class ~ .,
+  data = tic_tac_toe_train,
+  trControl = fitControl,
+  method = "svmLinear"
+)
+
+model_evaluation_summary <- data.frame(
+  Model = c(
+    "Naive Bayes", "Decision Tree", "Neural Network",
+    "k-Nearest Neighbors", "Support Vector Machine"
+  ),
+  Accuracy = c(
+    getTrainPerf(model_bayes)$TrainAccuracy,
+    getTrainPerf(model_tree)$TrainAccuracy,
+    getTrainPerf(model_nn)$TrainAccuracy,
+    getTrainPerf(model_knn)$TrainAccuracy,
+    getTrainPerf(model_svm)$TrainAccuracy
+  ),
+  Kappa = c(
+    getTrainPerf(model_bayes)$TrainKappa,
+    getTrainPerf(model_tree)$TrainKappa,
+    getTrainPerf(model_nn)$TrainKappa,
+    getTrainPerf(model_knn)$TrainKappa,
+    getTrainPerf(model_svm)$TrainKappa
+  )
+)
+
+print(
+  model_evaluation_summary[order(model_evaluation_summary$Accuracy, decreasing = TRUE), ],
+  row.names = FALSE
+)
+\end{lstlisting}
+
+\subsection{Results and Discussion}
+
+\begin{table}[htbp]\centering
+    \begin{tabular}{lrr}\toprule
+        Model               & CV accuracy & CV kappa  \\\midrule
+        Naive Bayes         & 0.7021291   & 0.3301961 \\
+        Decision tree       & 0.7425593   & 0.3579133 \\
+        Neural network      & 0.9791703   & 0.9533158 \\
+        k-Nearest neighbors & 0.9360184   & 0.8534526 \\
+        Linear SVM          & 0.9806629   & 0.9565920 \\\bottomrule
+    \end{tabular}
+    \caption{Recorded ten-fold cross-validation results at each selected tuning configuration.}
+\end{table}
+These are resampling results returned by \texttt{getTrainPerf()}, rather than accuracy on the data used to fit the final model. The SVM ranks first, narrowly ahead of the neural network: their accuracy difference is approximately 0.00149. Without paired fold results or uncertainty estimates, this small difference does not establish a reliable superiority in the wider population. The nearest-neighbor model ranks third. Naive Bayes and the decision tree have appreciably lower accuracy and kappa.
+
+The output contains many neural-network fits that stop after 100 iterations. Reaching the iteration limit does not demonstrate convergence; the report retains the requested default training procedure rather than changing it retrospectively. The selected tuning values are not printed in the supplied log, so no unrecorded values are asserted here.
+
+\section{Exercise 4: Test Predictions and Model Evaluation}
+\subsection{Objective and Implementation}
+Class predictions are obtained with \texttt{type = "raw"}; probability predictions are obtained with \texttt{type = "prob"}. Accuracy and Cohen's kappa are calculated using \texttt{postResample()}. AUC uses the probability of \texttt{positive}, with labels explicitly encoded as 0 and 1. Probabilities are already needed here to calculate AUC and are reused in Exercise 5.
+\begin{lstlisting}
+library(AUC)
+
+# Naive Bayes
+pred_bayes <- predict(
+  model_bayes,
+  newdata = tic_tac_toe_test,
+  type = "raw"
+)
+prob_bayes <- predict(
+  model_bayes,
+  newdata = tic_tac_toe_test,
+  type = "prob"
+)
+auc_bayes <- AUC::auc(
+  AUC::roc(
+    prob_bayes$positive,
+    factor(as.integer(tic_tac_toe_test$Class == "positive"))
+  )
+)
+confusionMatrix(
+  data = pred_bayes,
+  reference = tic_tac_toe_test$Class
+)
+
+# Decision Tree
+pred_tree <- predict(
+  model_tree,
+  newdata = tic_tac_toe_test,
+  type = "raw"
+)
+prob_tree <- predict(
+  model_tree,
+  newdata = tic_tac_toe_test,
+  type = "prob"
+)
+auc_tree <- AUC::auc(
+  AUC::roc(
+    prob_tree$positive,
+    factor(as.integer(tic_tac_toe_test$Class == "positive"))
+  )
+)
+confusionMatrix(
+  data = pred_tree,
+  reference = tic_tac_toe_test$Class
+)
+
+# Neural Network
+pred_nn <- predict(
+  model_nn,
+  newdata = tic_tac_toe_test,
+  type = "raw"
+)
+prob_nn <- predict(
+  model_nn,
+  newdata = tic_tac_toe_test,
+  type = "prob"
+)
+auc_nn <- AUC::auc(
+  AUC::roc(
+    prob_nn$positive,
+    factor(as.integer(tic_tac_toe_test$Class == "positive"))
+  )
+)
+confusionMatrix(
+  data = pred_nn,
+  reference = tic_tac_toe_test$Class
+)
+
+# k-Nearest Neighbors
+pred_knn <- predict(
+  model_knn,
+  newdata = tic_tac_toe_test,
+  type = "raw"
+)
+prob_knn <- predict(
+  model_knn,
+  newdata = tic_tac_toe_test,
+  type = "prob"
+)
+auc_knn <- AUC::auc(
+  AUC::roc(
+    prob_knn$positive,
+    factor(as.integer(tic_tac_toe_test$Class == "positive"))
+  )
+)
+confusionMatrix(
+  data = pred_knn,
+  reference = tic_tac_toe_test$Class
+)
+
+# Support Vector Machine (with a linear kernel)
+pred_svm <- predict(
+  model_svm,
+  newdata = tic_tac_toe_test,
+  type = "raw"
+)
+prob_svm <- predict(
+  model_svm,
+  newdata = tic_tac_toe_test,
+  type = "prob"
+)
+auc_svm <- AUC::auc(
+  AUC::roc(
+    prob_svm$positive,
+    factor(as.integer(tic_tac_toe_test$Class == "positive"))
+  )
+)
+confusionMatrix(
+  data = pred_svm,
+  reference = tic_tac_toe_test$Class
+)
+
+# Metrics for the summary data frame
+metrics_bayes <- postResample(pred_bayes, tic_tac_toe_test$Class)
+metrics_tree <- postResample(pred_tree, tic_tac_toe_test$Class)
+metrics_nn <- postResample(pred_nn, tic_tac_toe_test$Class)
+metrics_knn <- postResample(pred_knn, tic_tac_toe_test$Class)
+metrics_svm <- postResample(pred_svm, tic_tac_toe_test$Class)
+
+model_test_summary <- rbind(
+  "Naive Bayes" = c(metrics_bayes, AUC = as.numeric(auc_bayes)),
+  "Decision Tree" = c(metrics_tree, AUC = as.numeric(auc_tree)),
+  "Neural Network" = c(metrics_nn, AUC = as.numeric(auc_nn)),
+  "k-Nearest Neighbors" = c(metrics_knn, AUC = as.numeric(auc_knn)),
+  "Support Vector Machine" = c(metrics_svm, AUC = as.numeric(auc_svm))
+)
+
+model_test_summary <- data.frame(
+  Models = rownames(model_test_summary),
+  model_test_summary,
+  row.names = NULL
+)
+
+print(model_test_summary[order(model_test_summary$Accuracy, decreasing = TRUE), ], row.names = FALSE)
+\end{lstlisting}
+
+\subsection{Results and Discussion}
+
+\begin{table}[htbp]\centering
+    \begin{tabular}{lrrr}\toprule
+        Model               & Accuracy  & Kappa     & AUC       \\\midrule
+        Naive Bayes         & 0.6853147 & 0.2701185 & 0.7127964 \\
+        Decision tree       & 0.7377622 & 0.2950108 & 0.6591854 \\
+        Neural network      & 0.9860140 & 0.9689552 & 0.9979474 \\
+        k-Nearest neighbors & 0.9545455 & 0.8973892 & 0.9983795 \\
+        Linear SVM          & 0.9895105 & 0.9766607 & 0.9987036 \\\bottomrule
+    \end{tabular}
+    \caption{Recorded evaluation on the same 286 test observations. AUC treats \texttt{positive} as the event.}
+\end{table}
+\begin{table}[htbp]\centering
+    \begin{tabular}{lrrrrr}\toprule
+        Model               & TN & FN & FP & TP  & Errors \\\midrule
+        Naive Bayes         & 44 & 35 & 55 & 152 & 90     \\
+        Decision tree       & 24 & 0  & 75 & 187 & 75     \\
+        Neural network      & 96 & 1  & 3  & 186 & 4      \\
+        k-Nearest neighbors & 88 & 2  & 11 & 185 & 13     \\
+        Linear SVM          & 96 & 0  & 3  & 187 & 3      \\\bottomrule
+    \end{tabular}
+    \caption{All five recorded confusion matrices in compact form. For each model the matrix is
+        $\left(\begin{smallmatrix}\mathrm{TN}&\mathrm{FN}\\\mathrm{FP}&\mathrm{TP}\end{smallmatrix}\right)$,
+        with prediction in rows and reference in columns, ordered negative then positive.}
+\end{table}
+The supplied calls to \texttt{confusionMatrix()} omit \texttt{positive}. Consequently, caret labels the first factor level, \texttt{negative}, as the positive class in its printed sensitivity and specificity. This changes the interpretation of those two rates, but not accuracy or kappa. The counts above and the following rates instead use a win by \texttt{x} (\texttt{positive}) as the event, consistently with AUC and ROC:
+\[
+    \mathrm{TPR}=\frac{TP}{TP+FN},\qquad
+    \mathrm{FPR}=\frac{FP}{FP+TN},\qquad
+    \mathrm{Accuracy}=\frac{TP+TN}{286}.
+\]
+\begin{table}[htbp]\centering
+    \begin{tabular}{lrrr}\toprule
+        Model               & TPR      & Specificity & FPR      \\\midrule
+        Naive Bayes         & 0.812834 & 0.444444    & 0.555556 \\
+        Decision tree       & 1.000000 & 0.242424    & 0.757576 \\
+        Neural network      & 0.994652 & 0.969697    & 0.030303 \\
+        k-Nearest neighbors & 0.989305 & 0.888889    & 0.111111 \\
+        Linear SVM          & 1.000000 & 0.969697    & 0.030303 \\\bottomrule
+    \end{tabular}
+    \caption{Rates derived from the recorded matrices, using \texttt{positive} as the event.}
+\end{table}
+The SVM makes three false-positive errors and no false-negative errors; the network makes three false positives and one false negative. Their test accuracies therefore differ by just one observation. The majority-class baseline always predicts \texttt{positive} and achieves $187/286=0.653846$. Both weaker models exceed this baseline, but the tree's perfect positive-class recall is accompanied by 75 false positives among 99 negative cases. Its accuracy alone hides this imbalance.
+
+The nearest-neighbor model has slightly higher AUC than the network despite lower accuracy. AUC measures ranking across score thresholds, whereas accuracy evaluates the returned class labels. Therefore, the two metrics need not order the models identically. Test accuracy is slightly above CV accuracy for the SVM, network, and nearest neighbors; one random split is insufficient to conclude that this pattern will persist.
+
+\section{Exercise 5: ROC Curves and Final Model Selection}
+\subsection{Objective and Implementation}
+The probability vectors from Exercise 4 supply the scores for part (a). For parts (b)--(c), \texttt{prediction()} combines those scores with the observed classes, and \texttt{performance()} calculates TPR against FPR. The loop overlays all five curves for part (d). The plot title is translated into English below.
+\begin{lstlisting}
+library(ROCR)
+
+# Naive Bayes
+prediction_bayes <- prediction(
+  prob_bayes$positive,
+  tic_tac_toe_test$Class
+)
+performance_bayes <- ROCR::performance(
+  prediction_bayes,
+  measure = "tpr",
+  x.measure = "fpr"
+)
+
+# Decision Tree
+prediction_tree <- prediction(
+  prob_tree$positive,
+  tic_tac_toe_test$Class
+)
+performance_tree <- ROCR::performance(
+  prediction_tree,
+  measure = "tpr",
+  x.measure = "fpr"
+)
+
+# Neural Network
+prediction_nn <- prediction(
+  prob_nn$positive,
+  tic_tac_toe_test$Class
+)
+performance_nn <- ROCR::performance(
+  prediction_nn,
+  measure = "tpr",
+  x.measure = "fpr"
+)
+
+# k-Nearest Neighbors
+prediction_knn <- prediction(
+  prob_knn$positive,
+  tic_tac_toe_test$Class
+)
+performance_knn <- ROCR::performance(
+  prediction_knn,
+  measure = "tpr",
+  x.measure = "fpr"
+)
+
+# Support Vector Machine (with a linear kernel)
+prediction_svm <- prediction(
+  prob_svm$positive,
+  tic_tac_toe_test$Class
+)
+performance_svm <- ROCR::performance(
+  prediction_svm,
+  measure = "tpr",
+  x.measure = "fpr"
+)
+
+# Draw
+perf_list <- list(performance_bayes, performance_tree, performance_nn, performance_knn, performance_svm)
+size <- length(perf_list)
+cols <- rainbow(size)
+
+for (i in 1:size) {
+  plot(perf_list[[i]],
+    col = cols[i], lwd = 2,
+    add = (i != 1),
+    main = if (i == 1) "ROC curves on the test set" else NULL
+  )
+}
+
+legend(
+  "bottomright",
+  legend = c("Naive Bayes", "Decision Tree", "Neural Network", "k-Nearest Neighbors", "SVM Linear"),
+  col = cols, lwd = 2,
+  lty = 1
+)
+\end{lstlisting}
+
+\subsection{Results and Discussion}
+
+\begin{figure}[!ht]\centering
+    \includegraphics[width=.87\textwidth]{../Rplots.pdf}
+    \caption{Test ROC curves, with a win by \texttt{x} as the positive event. The dashed diagonal represents random ranking.}
+    \label{fig:roc}
+\end{figure}
+The neural network, nearest neighbors, and SVM have AUC values close to one. Naive Bayes and the tree are substantially less effective rankers in this experiment. The tree can have higher accuracy than Naive Bayes while having lower AUC because the measures evaluate different aspects of prediction.
+
+The recorded ROCR objects contain 287 points for Naive Bayes, the network, and SVM, six for the tree, and 14 for nearest neighbors. These are threshold-dependent ROC points, not different test sample sizes. Repeated scores produce fewer distinct thresholds, as expected for a tree's leaf probabilities and discrete nearest-neighbor votes. The counts alone do not measure model quality.
+
+\subsection{Which Models Should Be Kept or Discarded?}
+For part (e), I would keep the linear SVM as the preferred model and retain the neural network and nearest neighbors as useful alternatives. The SVM leads the recorded CV accuracy and kappa as well as all three test summary metrics. Its test errors are few, and its ROC curve gives strong ranking performance. The network is a close competitor, with only one additional test error. Nearest neighbors is weaker at its returned class predictions but retains excellent ranking ability.
+
+I would discard Naive Bayes and the default decision tree from the final shortlist for this experiment: both are substantially worse on CV accuracy and kappa, test accuracy and kappa, and AUC. This conclusion concerns the evaluated default fits; it does not establish that every possible configuration of either model family would perform poorly.
+
+\section{Conclusion}
+The recommended model is the linear SVM. It achieves test accuracy 0.9895105, kappa 0.9766607, and AUC 0.9987036, with three errors in 286 cases. This recommendation is supported by its leading cross-validation performance, rather than test results alone. The neural network is very close, so the observed ranking should not be interpreted as a statistically established difference.
+
+All results concern one seeded split of this finite dataset of final board configurations. The test set has been used to compare the models, so an additional independent evaluation would be appropriate before making broader claims about a selected model. No unreported reruns, convergence improvements, or new performance values are substituted for the supplied results.
+
+\end{document}
